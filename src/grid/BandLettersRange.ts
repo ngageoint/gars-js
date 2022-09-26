@@ -6,7 +6,7 @@ import { GARSUtils } from '../GARSUtils';
  *
  * @author osbornb
  */
-export class BandLettersRange implements Iterable<string> {
+export class BandLettersRange implements IterableIterator<string> {
   /**
    * Southern band letters
    */
@@ -116,20 +116,22 @@ export class BandLettersRange implements Iterable<string> {
     return GARSUtils.getLatitude(this.north);
   }
 
-  [Symbol.iterator](): Iterator<string> {
-    const itDone = this.value <= this.maxValue;
-    let itValue: string;
-    if(!itDone) {
-      itValue = GARSUtils.bandLetters(this.value++);
-    }
-   
-    return {
-      next(): IteratorResult<string> {
-        return {
-          done: itDone,
-          value: itValue
-        }
+  public next(): IteratorResult<string> {
+
+    if(this.value <= this.maxValue) {
+      return {
+        done: true,
+        value: null
       }
-    };
+    } else {
+      return {
+        done: false,
+        value: GARSUtils.bandLetters(this.value++);
+      }
+    }
+  }
+
+  [Symbol.iterator](): IterableIterator<string> {
+    return this;
   }
 }

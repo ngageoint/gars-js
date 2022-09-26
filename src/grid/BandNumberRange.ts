@@ -6,7 +6,7 @@ import { GARSUtils } from '../GARSUtils';
  *
  * @author osbornb
  */
-export class BandNumberRange implements Iterable<number> {
+export class BandNumberRange implements IterableIterator<number> {
   /**
    * Western band number
    */
@@ -92,20 +92,22 @@ export class BandNumberRange implements Iterable<number> {
     return GARSUtils.getLongitude(this.east);
   }
 
-  [Symbol.iterator](): Iterator<number> {
-    const itDone = this.bandNumber <= this.east;
-    let itValue: number;
-    if (!itDone) {
-      this.bandNumber++;
-    }
-
-    return {
-      next(): IteratorResult<number> {
-        return {
-          done: itDone,
-          value: itValue
-        }
+  public next(): IteratorResult<number> {
+    if (this.bandNumber <= this.east) {
+      return {
+        done: true,
+        value: null
       }
-    };
+    } else {
+      return {
+        done: false,
+        value: this.bandNumber++
+      }
+
+    }
+  }
+
+  [Symbol.iterator](): IterableIterator<number> {
+    return this;
   }
 }
