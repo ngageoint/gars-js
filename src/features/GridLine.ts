@@ -1,4 +1,5 @@
 import { Line, Point } from '@ngageoint/grid-js';
+import { GridType } from '../grid/GridType';
 
 /**
  * Line between two points
@@ -6,15 +7,11 @@ import { Line, Point } from '@ngageoint/grid-js';
  * @author osbornb
  */
 export class GridLine extends Line {
-  /**
-   * Serial Version UID
-   */
-  private static readonly serialVersionUID = 1;
 
   /**
    * Grid type the line represents if any
    */
-  private gridType: GridType;
+  private gridType?: GridType;
 
   /**
    * Create a line
@@ -59,7 +56,7 @@ export class GridLine extends Line {
    *
    * @return grid type
    */
-  public getGridType(): GridType {
+  public getGridType(): GridType | undefined {
     return this.gridType;
   }
 
