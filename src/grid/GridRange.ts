@@ -1,4 +1,5 @@
 import { Bounds } from '@ngageoint/grid-js';
+import { GARS } from '../GARS';
 import { BandLettersRange } from './BandLettersRange';
 import { BandNumberRange } from './BandNumberRange';
 
@@ -7,7 +8,7 @@ import { BandNumberRange } from './BandNumberRange';
  *
  * @author osbornb
  */
-export class GridRange implements Iterable<GARS> {
+export class GridRange implements IterableIterator<GARS> {
   /**
    * Band Number Range
    */
@@ -21,17 +22,17 @@ export class GridRange implements Iterable<GARS> {
   /**
    * Band numbers
    */
-  private readonly bandNumbers: Iterator<number>;
+  private readonly bandNumbers: IteratorResult<number>;
 
   /**
    * Band letters
    */
-  private bandLetters: Iterator<string>;
+  private bandLetters: IteratorResult<string>;
 
   /**
    * Current band number
    */
-  private bandNumber: number;
+  private bandNumber?: number;
 
   /**
    * Constructor (full range if no parameters)
@@ -45,10 +46,12 @@ export class GridRange implements Iterable<GARS> {
     this.bandNumberRange = bandNumberRange;
     this.bandLettersRange = bandLettersRange;
 
-    this.bandNumbers = bandNumberRange.iterator();
-    this.bandLetters = bandLettersRange.iterator();
+    this.bandNumbers = bandNumberRange.next();
+    this.bandLetters = bandLettersRange.next();
 
-    this.bandNumber = this.bandNumbers.hasNext() ? this.bandNumbers.next() : null;
+    if (!this.bandNumbers.done) {
+      this.bandNumber = this.bandNumbers.value;
+    }
   }
 
   /**
@@ -103,21 +106,37 @@ export class GridRange implements Iterable<GARS> {
     return Bounds.degrees(west, south, east, north);
   }
 
-  [Symbol.iterator](): Iterator<string> {
-    return {
-      next: function () {
-        const letters = bandLetters.next();
-        const gars = GARS.create(bandNumber, letters);
-        if (!bandLetters.hasNext()) {
-          if (bandNumbers.hasNext()) {
-            bandNumber = bandNumbers.next();
-            bandLetters = bandLettersRange.iterator();
-          } else {
-            bandNumber = null;
-          }
+  public next(): IteratorResult<GARS> {
+
+    if (!this.bandNumber || this.bandLetters.done) {
+      return {
+        done: true,
+        value: null
+      }
+    } else {
+      const letters = this.bandLetters.value;
+      const gars = GARS.create(this.bandNumber, letters);
+
+      this.bandLetters = this.bandLettersRange.next();
+
+      if(this.bandLetters.done) {
+        if(!this.bandNumbers?.done) {
+          this.bandNumber =  this.bandNumbers?.value;
+          // TODO this needs to be reset
+          this.bandLetters = this.bandLettersRange.next();
+        } else {
+          this.bandNumber = undefined;
         }
-        return gars;
-      },
-    };
+      }
+
+      return {
+        done: false,
+        value: gars
+      }
+    }
+  }
+
+  [Symbol.iterator](): IterableIterator<GARS> {
+    return this;
   }
 }

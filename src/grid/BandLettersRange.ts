@@ -126,7 +126,7 @@ export class BandLettersRange implements IterableIterator<string> {
     } else {
       return {
         done: false,
-        value: GARSUtils.bandLetters(this.value++);
+        value: GARSUtils.bandLetters(this.value++)
       }
     }
   }
