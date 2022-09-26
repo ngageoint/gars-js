@@ -29,7 +29,10 @@ export class GridLine extends Line {
      * @return line
      */
     public static line(point1: Point, point2: Point, gridType?: GridType): GridLine {
-        return new GridLine(point1, point2, gridType);
+        const gl: GridLine = new GridLine();
+        gl.setPoints(point1, point2);
+        gl.setGridType(gridType);
+        return gl;
     }
 
     /**
@@ -42,78 +45,14 @@ export class GridLine extends Line {
      * @return line
      */
     public static lineFromLine(line: Line, gridType?: GridType): GridLine {
-        return new GridLine(line, gridType);
-    }
-
-    /**
-     * Copy a line
-     * 
-     * @param line
-     *            line to copy
-     * @return line
-     */
-    public static lineFromGridLine(line: GridLine): GridLine {
-        return new GridLine(line);
-    }
-
-    /**
-     * Constructor
-     * 
-     * @param point1
-     *            first point
-     * @param point2
-     *            second point
-     */
-    constructor(Point point1, Point point2) {
-        super(point1, point2);
-    }
-
-    /**
-     * Constructor
-     * 
-     * @param point1
-     *            first point
-     * @param point2
-     *            second point
-     * @param gridType
-     *            line grid type
-     */
-    constructor(Point point1, Point point2, GridType gridType) {
-        this(point1, point2);
-        this.gridType = gridType;
-    }
-
-    /**
-     * Constructor
-     * 
-     * @param line
-     *            line to copy
-     */
-    constructor(Line line) {
-        super(line);
-    }
-
-    /**
-     * Constructor
-     * 
-     * @param line
-     *            line to copy
-     * @param gridType
-     *            line grid type
-     */
-    constructor(Line line, GridType gridType) {
-        this(line);
-        this.gridType = gridType;
-    }
-
-    /**
-     * Copy Constructor
-     * 
-     * @param line
-     *            line to copy
-     */
-    constructor(GridLine line) {
-        this(line, line.getGridType());
+        const gl: GridLine =  new GridLine();
+        gl.hasZ = line.hasZ;
+        gl.hasM = line.hasM;
+        for (let point of line.points) {
+			gl.addPoint(point.copy() as Point);
+		}
+        gl.setGridType(gridType);
+        return gl;
     }
 
     /**
@@ -140,7 +79,7 @@ export class GridLine extends Line {
      * @param gridType
      *            grid type
      */
-    public setGridType(gridType: GridType): void {
+    public setGridType(gridType?: GridType): void {
         this.gridType = gridType;
     }
 
