@@ -1,4 +1,6 @@
 import { Bounds, Label, Point } from '@ngageoint/grid-js';
+import { GARS } from '../GARS';
+import { GridType } from './GridType';
 
 /**
  * GARS Grid Label
