@@ -1,5 +1,6 @@
 import { Point } from "@ngageoint/grid-js";
 import { GARSConstants } from "./GARSConstants";
+import { GARSUtils } from "./GARSUtils";
 import { GridType } from "./grid/GridType";
 
 /**
@@ -199,17 +200,17 @@ export class GARS {
      *            potential GARS string
      * @return true if GARS string is valid, false otherwise
      */
-    public static boolean isGARS(String gars) {
-        gars = removeSpaces(gars);
-		Matcher matcher = garsPattern.matcher(gars);
-		boolean matches = matcher.matches();
+    public static isGARS(gars: string): boolean {
+        gars = this.removeSpaces(gars);
+		const matcher = garsPattern.matcher(gars);
+        let matches = matcher.matches();
         if (matches) {
-			int longitude = Integer.parseInt(matcher.group(1));
+            const longitude = Number.parseInt(matcher.group(1));
             matches = longitude >= GARSConstants.MIN_BAND_NUMBER
                 && longitude <= GARSConstants.MAX_BAND_NUMBER;
             if (matches) {
-				String latitude = matcher.group(2).toUpperCase();
-				int latitudeValue = GARSUtils.bandValue(latitude);
+                const latitude = matcher.group(2).toUpperCase();
+                const latitudeValue = GARSUtils.bandValue(latitude);
                 matches = latitudeValue >= GARSConstants.MIN_BAND_LETTERS_NUMBER
                     && latitudeValue <= GARSConstants.MAX_BAND_LETTERS_NUMBER;
             }
@@ -277,7 +278,7 @@ export class GARS {
      * @return GARS
      */
     public static parse(gars: string): GARS {
-        const matcher = garsPattern.matcher(this.removeSpaces(gars));
+        const matcher = this.garsPattern.matcher(this.removeSpaces(gars));
         if (!matcher.matches()) {
             throw new Error("Invalid GARS: " + gars);
         }
@@ -325,7 +326,7 @@ export class GARS {
      * @return grid type precision
      */
     public static precision(gars: string): GridType {
-        const matcher = garsPattern.matcher(this.removeSpaces(gars));
+        const matcher = this.garsPattern.matcher(this.removeSpaces(gars));
         if (!matcher.matches()) {
             throw new Error("Invalid GARS: " + gars);
         }
