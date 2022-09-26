@@ -5,7 +5,7 @@ import { GARSConstants } from '../GARSConstants';
  *
  * @author osbornb
  */
-export class BandLettersRange implements Iterable<String> {
+export class BandLettersRange implements Iterable<string> {
   /**
    * Southern band letters
    */
