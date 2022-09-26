@@ -1,4 +1,5 @@
 import { GARSConstants } from '../GARSConstants';
+import { GARSUtils } from '../GARSUtils';
 
 /**
  * Longitude Band Number Range
@@ -29,7 +30,7 @@ export class BandNumberRange implements Iterable<number> {
    * @param east
    *            eastern band number
    */
-  public BandNumberRange(west: number = GARSConstants.MIN_BAND_NUMBER, east: number = GARSConstants.MAX_BAND_NUMBER) {
+  constructor(west: number = GARSConstants.MIN_BAND_NUMBER, east: number = GARSConstants.MAX_BAND_NUMBER) {
     this.west = west;
     this.east = east;
     this.bandNumber = this.west;
@@ -92,10 +93,19 @@ export class BandNumberRange implements Iterable<number> {
   }
 
   [Symbol.iterator](): Iterator<number> {
+    const itDone = this.bandNumber <= this.east;
+    let itValue: number;
+    if (!itDone) {
+      this.bandNumber++;
+    }
+
     return {
-      next: function () {
-        return GARSUtils.bandLetters(this.bandNumber++);
-      },
+      next(): IteratorResult<number> {
+        return {
+          done: itDone,
+          value: itValue
+        }
+      }
     };
   }
 }
