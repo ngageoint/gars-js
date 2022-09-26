@@ -1,8 +1,11 @@
 import { Color } from "@ngageoint/color-js";
 import { GridStyle, PropertyConstants } from "@ngageoint/grid-js";
+import { GARSProperties } from "../property/GARSProperties";
 import { GARSLabeler } from "./GARSLabeler";
 import { Grid } from "./Grid";
 import { GridLabeler } from "./GridLabeler";
+import { GridType } from "./GridType";
+import { ZoomGrids } from "./ZoomGrids";
 
 /**
  * Grids
@@ -99,7 +102,7 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
             PropertyConstants.GRIDS, PropertyConstants.PROPAGATE);
         let styles: Map<GridType, GridStyle> | null = null;
         if (propagate != null && propagate) {
-            styles = Map<GridType, GridStyle>();
+            styles = new  Map<GridType, GridStyle>();
         }
 
         this.createGrid(GridType.TWENTY_DEGREE, styles, enabled, new GARSLabeler());
@@ -155,22 +158,22 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
     private loadGridStyles(grid: Grid, styles: Map<GridType, GridStyle>,
         gridKey: string): void {
         const precision = grid.getPrecision();
-        if (precision < GridType.TWENTY_DEGREE.getPrecision()) {
+        if (precision < GridType.TWENTY_DEGREE) {
             this.loadGridStyle(grid, styles, gridKey, GridType.TWENTY_DEGREE);
         }
-        if (precision < GridType.TEN_DEGREE.getPrecision()) {
+        if (precision < GridType.TEN_DEGREE) {
             this.loadGridStyle(grid, styles, gridKey, GridType.TEN_DEGREE);
         }
-        if (precision < GridType.FIVE_DEGREE.getPrecision()) {
+        if (precision < GridType.FIVE_DEGREE) {
             this.loadGridStyle(grid, styles, gridKey, GridType.FIVE_DEGREE);
         }
-        if (precision < GridType.ONE_DEGREE.getPrecision()) {
+        if (precision < GridType.ONE_DEGREE) {
             this.loadGridStyle(grid, styles, gridKey, GridType.ONE_DEGREE);
         }
-        if (precision < GridType.THIRTY_MINUTE.getPrecision()) {
+        if (precision < GridType.THIRTY_MINUTE) {
             this.loadGridStyle(grid, styles, gridKey, GridType.THIRTY_MINUTE);
         }
-        if (precision < GridType.FIFTEEN_MINUTE.getPrecision()) {
+        if (precision < GridType.FIFTEEN_MINUTE) {
             this.loadGridStyle(grid, styles, gridKey, GridType.FIFTEEN_MINUTE);
         }
     }
@@ -836,7 +839,7 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      * @param types
      *            grid types
      */
-    public setLabelColor(color: Color, types: GridType[]): Color {
+    public setLabelColor(color: Color, types: GridType[]): void {
         for (const type of types) {
             this.setLabelColor(type, color);
         }
