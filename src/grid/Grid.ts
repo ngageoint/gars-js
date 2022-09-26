@@ -1,6 +1,12 @@
 import { Color } from "@ngageoint/color-js";
 import { BaseGrid, Bounds, GridStyle, GridTile, Point, PropertyConstants } from "@ngageoint/grid-js";
 import { GridLine } from "../features/GridLine";
+import { GARSUtils } from "../GARSUtils";
+import { GARSProperties } from "../property/GARSProperties";
+import { GridLabel } from "./GridLabel";
+import { GridLabeler } from "./GridLabeler";
+import { GridType } from "./GridType";
+import { GridTypeUtils } from "./GridTypeUtils";
 
 /**
  * Grid
@@ -62,7 +68,7 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
      * @return precision degrees
      */
     public getPrecision(): number {
-        return this.type.getPrecision();
+        return this.type;
     }
 
     /**
@@ -73,7 +79,7 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
      * @return grid type line style
      */
     public getStyle(gridType: GridType): GridStyle {
-        let style: GridStyle | null = null;
+        let style: GridStyle;
         if (gridType === this.type) {
             style = this.getStyle();
         } else {
@@ -107,7 +113,7 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
      *            grid line style
      */
     public setStyle(gridType: GridType, style: GridStyle): void {
-        if (gridType.getPrecision() < this.getPrecision()) {
+        if (gridType < this.getPrecision()) {
             throw new Error(
                 "Grid can not define a style for a higher precision grid type. Type: "
                 + this.type + ", Style Type: " + gridType);
@@ -244,7 +250,7 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
      */
     public getLines(tileBounds: Bounds): GridLine[] {
 
-        const lines: GridLine[] = []];
+        const lines: GridLine[] = [];
 
         const precision = this.getPrecision();
 
@@ -254,13 +260,13 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
             .getMaxLongitude(); lon = GARSUtils.nextPrecision(lon,
                 precision)) {
 
-            const verticalPrecision = GridType.getPrecision(lon);
+            const verticalPrecision = GridTypeUtils.getPrecision(lon);
 
             for (let lat = tileBounds.getMinLatitude(); lat <= tileBounds
                 .getMaxLatitude(); lat = GARSUtils.nextPrecision(lat,
                     precision)) {
 
-                const horizontalPrecision = GridType.getPrecision(lat);
+                const horizontalPrecision = GridTypeUtils.getPrecision(lat);
 
                 const southwest = Point.point(lon, lat);
                 const northwest = Point.point(lon, lat + precision);
