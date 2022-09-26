@@ -1,4 +1,5 @@
 import { GARSConstants } from '../GARSConstants';
+import { GARSUtils } from '../GARSUtils';
 
 /**
  * Latitude Band Letters Range
@@ -116,10 +117,19 @@ export class BandLettersRange implements Iterable<string> {
   }
 
   [Symbol.iterator](): Iterator<string> {
+    const itDone = this.value <= this.maxValue;
+    let itValue: string;
+    if(!itDone) {
+      itValue = GARSUtils.bandLetters(this.value++);
+    }
+   
     return {
-      next: function () {
-        return GARSUtils.bandLetters(this.value++);
-      },
+      next(): IteratorResult<string> {
+        return {
+          done: itDone,
+          value: itValue
+        }
+      }
     };
   }
 }
