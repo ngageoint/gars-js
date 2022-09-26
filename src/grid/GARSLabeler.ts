@@ -1,4 +1,9 @@
 import { Bounds } from "@ngageoint/grid-js";
+import { GARS } from "../GARS";
+import { GARSUtils } from "../GARSUtils";
+import { GridLabel } from "./GridLabel";
+import { GridLabeler } from "./GridLabeler";
+import { GridType } from "./GridType";
 
 /**
  * GARS grid labeler
@@ -174,22 +179,20 @@ export class GARSLabeler extends GridLabeler {
 
         const labels: GridLabel[] = [];
 
-        const precision = gridType.getPrecision();
-
-        tileBounds = tileBounds.toPrecision(precision);
+        tileBounds = tileBounds.toPrecision(gridType);
 
         for (let lon = tileBounds.getMinLongitude(); lon <= tileBounds
             .getMaxLongitude(); lon = GARSUtils.nextPrecision(lon,
-                precision)) {
+                gridType)) {
 
             for (let lat = tileBounds.getMinLatitude(); lat <= tileBounds
                 .getMaxLatitude(); lat = GARSUtils.nextPrecision(lat,
-                    precision)) {
+                    gridType)) {
 
-                const bounds = Bounds.degrees(lon, lat, lon + precision,
-                    lat + precision);
+                const bounds = Bounds.degrees(lon, lat, lon + gridType,
+                    lat + gridType);
                 const center = bounds.getCentroid();
-                const coordinate = GARS.from(center);
+                const coordinate = GARS.fromPoint(center);
 
                 let name: string | null = null;
 

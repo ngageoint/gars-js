@@ -1,5 +1,8 @@
 import { Color } from "@ngageoint/color-js";
-import { Bounds, PropertyConstants } from "@ngageoint/grid-js";
+import { Bounds, Labeler, PropertyConstants } from "@ngageoint/grid-js";
+import { GARSProperties } from "../property/GARSProperties";
+import { GridLabel } from "./GridLabel";
+import { GridType } from "./GridType";
 
 /**
  * Grid Labeler
@@ -26,7 +29,7 @@ export abstract class GridLabeler extends Labeler {
      * Default Constructor
      */
     public GridLabeler() {
-        super(true, 0, null, Color.black(), DEFAULT_TEXT_SIZE, DEFAULT_BUFFER);
+        super(true, 0, null, Color.black(), GridLabeler.DEFAULT_TEXT_SIZE, GridLabeler.DEFAULT_BUFFER);
     }
 
     /**
@@ -38,7 +41,7 @@ export abstract class GridLabeler extends Labeler {
      *            label color
      */
     public GridLabeler(int minZoom, Color color) {
-        this(minZoom, color, DEFAULT_TEXT_SIZE);
+        this(minZoom, color, GridLabeler.DEFAULT_TEXT_SIZE);
     }
 
     /**
@@ -52,7 +55,7 @@ export abstract class GridLabeler extends Labeler {
      *            label text size
      */
     public GridLabeler(int minZoom, Color color, double textSize) {
-        super(minZoom, color, textSize, DEFAULT_BUFFER);
+        super(minZoom, color, textSize, GridLabeler.DEFAULT_BUFFER);
     }
 
     /**
@@ -84,7 +87,7 @@ export abstract class GridLabeler extends Labeler {
      *            label color
      */
     public GridLabeler(int minZoom, Integer maxZoom, Color color) {
-        this(minZoom, maxZoom, color, DEFAULT_TEXT_SIZE);
+        this(minZoom, maxZoom, color, GridLabeler.DEFAULT_TEXT_SIZE);
     }
 
     /**
@@ -101,7 +104,7 @@ export abstract class GridLabeler extends Labeler {
      */
     public GridLabeler(int minZoom, Integer maxZoom, Color color,
         double textSize) {
-        super(minZoom, maxZoom, color, textSize, DEFAULT_BUFFER);
+        super(minZoom, maxZoom, color, textSize, GridLabeler.DEFAULT_BUFFER);
     }
 
     /**
@@ -138,7 +141,7 @@ export abstract class GridLabeler extends Labeler {
      */
     public GridLabeler(boolean enabled, int minZoom, Integer maxZoom,
         Color color) {
-        this(enabled, minZoom, maxZoom, color, DEFAULT_TEXT_SIZE);
+        this(enabled, minZoom, maxZoom, color, GridLabeler.DEFAULT_TEXT_SIZE);
     }
 
     /**
@@ -157,7 +160,7 @@ export abstract class GridLabeler extends Labeler {
      */
     public GridLabeler(boolean enabled, int minZoom, Integer maxZoom,
         Color color, double textSize) {
-        super(enabled, minZoom, maxZoom, color, textSize, DEFAULT_BUFFER);
+        super(enabled, minZoom, maxZoom, color, textSize, GridLabeler.DEFAULT_BUFFER);
     }
 
     /**
