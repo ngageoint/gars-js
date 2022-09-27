@@ -13,9 +13,9 @@ export class GARS {
     /**
      * GARS string pattern
      */
-    private static final Pattern garsPattern = Pattern.compile(
+    private static readonly garsPattern = new RegExp(
         "^(\\d{3})([A-HJ-NP-Z]{2})(?:([1-4])([1-9])?)?$",
-        Pattern.CASE_INSENSITIVE);
+        "i");
 
     /**
      * Longitudinal band number
@@ -118,9 +118,7 @@ export class GARS {
      * @return GARS coordinate
      */
     public coordinate(type = GridType.FIVE_MINUTE): string {
-        let gars = '';
-
-        gars += String.format("%03d", this.longitude);
+        let gars = String.format("%03d", this.longitude);
         gars += this.latitude;
 
         if (type === GridType.FIFTEEN_MINUTE || type === GridType.FIVE_MINUTE) {
@@ -202,7 +200,7 @@ export class GARS {
      */
     public static isGARS(gars: string): boolean {
         gars = this.removeSpaces(gars);
-		const matcher = garsPattern.matcher(gars);
+		const matcher = this.garsPattern.matcher(gars);
         let matches = matcher.matches();
         if (matches) {
             const longitude = Number.parseInt(matcher.group(1));
@@ -226,7 +224,7 @@ export class GARS {
      * @return value without spaces
      */
     private static removeSpaces(value: string): string {
-        return value.replaceAll("\\s", "");
+        return value.replace("\\s", "");
     }
 
     /**

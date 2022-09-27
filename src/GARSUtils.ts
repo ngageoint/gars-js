@@ -106,8 +106,8 @@ export class GARSUtils {
      */
     public static bandValue(latitudeBand: string): number {
         const latitude = latitudeBand.toUpperCase();
-        const latitude1 = this.bandValue(latitude.charAt(0));
-        const latitude2 = this.bandValue(latitude.charAt(1));
+        const latitude1 = this.bandValueFromChar(latitude.charCodeAt(0));
+        const latitude2 = this.bandValueFromChar(latitude.charCodeAt(1));
         return 24 * (latitude1 - 1) + latitude2;
     }
 
@@ -119,11 +119,11 @@ export class GARSUtils {
      *            single character from latitude band
      * @return number band value
      */
-    public static bandValue(latitudeBand: string): number {
-        let value = latitudeBand - GARSConstants.MIN_BAND_LETTER + 1;
-        if (latitudeBand > GridConstants.BAND_LETTER_OMIT_I) {
+    public static bandValueFromChar(latitudeBand: number): number {
+        let value = latitudeBand - GARSConstants.MIN_BAND_LETTER.charCodeAt(0) + 1;
+        if (latitudeBand > GridConstants.BAND_LETTER_OMIT_I.charCodeAt(0)) {
             value--;
-            if (latitudeBand > GridConstants.BAND_LETTER_OMIT_O) {
+            if (latitudeBand > GridConstants.BAND_LETTER_OMIT_O.charCodeAt(0)) {
                 value--;
             }
         }
@@ -141,7 +141,7 @@ export class GARSUtils {
         bandValue -= 1;
         const latitude1 = bandValue / 24;
         const latitude2 = bandValue % 24;
-        return String.valueOf(this.bandLetter(latitude1 + 1))
+        return this.bandLetter(latitude1 + 1)
             + this.bandLetter(latitude2 + 1);
     }
 
@@ -154,15 +154,15 @@ export class GARSUtils {
      * @return single character of latitude band
      */
     public static bandLetter(bandValue: number): string {
-        let letter = GARSConstants.MIN_BAND_LETTER;
+        let letter = GARSConstants.MIN_BAND_LETTER.charCodeAt(0);
         letter += bandValue - 1;
-        if (letter >= GridConstants.BAND_LETTER_OMIT_I) {
+        if (letter >= GridConstants.BAND_LETTER_OMIT_I.charCodeAt(0)) {
             letter++;
-            if (letter >= GridConstants.BAND_LETTER_OMIT_O) {
+            if (letter >= GridConstants.BAND_LETTER_OMIT_O.charCodeAt(0)) {
                 letter++;
             }
         }
-        return letter;
+        return String.fromCharCode(letter);
     }
 
     /**
