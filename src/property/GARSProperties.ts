@@ -1,3 +1,4 @@
+import { GridProperties } from "@ngageoint/grid-js";
 
 /**
  * GARS property loader
