@@ -118,7 +118,8 @@ export class GARS {
      * @return GARS coordinate
      */
     public coordinate(type = GridType.FIVE_MINUTE): string {
-        let gars = String.format("%03d", this.longitude);
+        // TODO figure out this format
+        let gars = '';//String.format("%03d", this.longitude);
         gars += this.latitude;
 
         if (type === GridType.FIFTEEN_MINUTE || type === GridType.FIVE_MINUTE) {
@@ -200,17 +201,22 @@ export class GARS {
      */
     public static isGARS(gars: string): boolean {
         gars = this.removeSpaces(gars);
-		const matcher = this.garsPattern.matcher(gars);
-        let matches = matcher.matches();
-        if (matches) {
-            const longitude = Number.parseInt(matcher.group(1));
-            matches = longitude >= GARSConstants.MIN_BAND_NUMBER
-                && longitude <= GARSConstants.MAX_BAND_NUMBER;
-            if (matches) {
-                const latitude = matcher.group(2).toUpperCase();
-                const latitudeValue = GARSUtils.bandValue(latitude);
-                matches = latitudeValue >= GARSConstants.MIN_BAND_LETTERS_NUMBER
-                    && latitudeValue <= GARSConstants.MAX_BAND_LETTERS_NUMBER;
+
+        let matches = false;
+
+        if (this.garsPattern.test(gars)) {
+            const match = gars.match(this.garsPattern);
+
+            if (match) {
+                const longitude = Number.parseInt(match[1]);
+                matches = longitude >= GARSConstants.MIN_BAND_NUMBER
+                    && longitude <= GARSConstants.MAX_BAND_NUMBER;
+                if (matches) {
+                    const latitude = match[2].toUpperCase();
+                    const latitudeValue = GARSUtils.bandValue(latitude);
+                    matches = latitudeValue >= GARSConstants.MIN_BAND_LETTERS_NUMBER
+                        && latitudeValue <= GARSConstants.MAX_BAND_LETTERS_NUMBER;
+                }
             }
         }
         return matches;
@@ -276,36 +282,38 @@ export class GARS {
      * @return GARS
      */
     public static parse(gars: string): GARS {
-        const matcher = this.garsPattern.matcher(this.removeSpaces(gars));
-        if (!matcher.matches()) {
+        gars = this.removeSpaces(gars);
+        if (!this.garsPattern.test(gars)) {
             throw new Error("Invalid GARS: " + gars);
         }
 
-        const longitude = Number.parseInt(matcher.group(1));
+        const matches = gars.match(this.garsPattern);
+
+        const longitude = Number.parseInt(matches![1]);
         if (longitude < GARSConstants.MIN_BAND_NUMBER
             || longitude > GARSConstants.MAX_BAND_NUMBER) {
             throw new Error("Invalid GARS longitude: "
-                + matcher.group(1) + ", GARS: " + gars);
+                + matches![1] + ", GARS: " + gars);
         }
 
-        const latitude = matcher.group(2).toUpperCase();
+        const latitude = matches![2].toUpperCase();
         const latitudeValue = GARSUtils.bandValue(latitude);
         if (latitudeValue < GARSConstants.MIN_BAND_LETTERS_NUMBER
             || latitudeValue > GARSConstants.MAX_BAND_LETTERS_NUMBER) {
             throw new Error("Invalid GARS latitude: "
-                + matcher.group(2) + ", GARS: " + gars);
+                + matches![2] + ", GARS: " + gars);
         }
 
         let quadrant = GARSConstants.DEFAULT_QUADRANT;
         let keypad = GARSConstants.DEFAULT_KEYPAD;
 
-        const quadrantValue = matcher.group(3);
-        if (quadrantValue != null) {
+        const quadrantValue = matches![3];
+        if (quadrantValue) {
 
             quadrant = Number.parseInt(quadrantValue);
 
-            const keypadValue = matcher.group(4);
-            if (keypadValue != null) {
+            const keypadValue = matches![4];
+            if (keypadValue) {
 
                 keypad = Number.parseInt(keypadValue);
 
@@ -324,16 +332,18 @@ export class GARS {
      * @return grid type precision
      */
     public static precision(gars: string): GridType {
-        const matcher = this.garsPattern.matcher(this.removeSpaces(gars));
-        if (!matcher.matches()) {
+        gars = this.removeSpaces(gars);
+        if (!this.garsPattern.test(gars)) {
             throw new Error("Invalid GARS: " + gars);
         }
 
-        let precision: GridType | undefined;
+        const matches = gars.match(this.garsPattern);
 
-        if (matcher.group(4) != null) {
+        let precision: GridType;
+
+        if (matches![4]) {
             precision = GridType.FIVE_MINUTE;
-        } else if (matcher.group(3) != null) {
+        } else if (matches![3]) {
             precision = GridType.FIFTEEN_MINUTE;
         } else {
             precision = GridType.THIRTY_MINUTE;
