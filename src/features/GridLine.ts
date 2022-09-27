@@ -43,7 +43,7 @@ export class GridLine extends Line {
     const gl: GridLine = new GridLine();
     gl.hasZ = line.hasZ;
     gl.hasM = line.hasM;
-    for (let point of line.points) {
+    for (const point of line.points) {
       gl.addPoint(point.copy() as Point);
     }
     gl.setGridType(gridType);

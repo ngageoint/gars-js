@@ -120,7 +120,7 @@ export class GARS {
    */
   public coordinate(type = GridType.FIVE_MINUTE): string {
     // TODO figure out this format
-    let gars = ''; //String.format("%03d", this.longitude);
+    let gars = ''; // String.format("%03d", this.longitude);
     gars += this.latitude;
 
     if (type === GridType.FIFTEEN_MINUTE || type === GridType.FIVE_MINUTE) {
@@ -192,7 +192,7 @@ export class GARS {
       const match = gars.match(this.garsPattern);
 
       if (match) {
-        const longitude = Number.parseInt(match[1]);
+        const longitude = Number.parseInt(match[1], 10);
         matches = longitude >= GARSConstants.MIN_BAND_NUMBER && longitude <= GARSConstants.MAX_BAND_NUMBER;
         if (matches) {
           const latitude = match[2].toUpperCase();
@@ -272,7 +272,7 @@ export class GARS {
 
     const matches = gars.match(this.garsPattern);
 
-    const longitude = Number.parseInt(matches![1]);
+    const longitude = Number.parseInt(matches![1], 10);
     if (longitude < GARSConstants.MIN_BAND_NUMBER || longitude > GARSConstants.MAX_BAND_NUMBER) {
       throw new Error('Invalid GARS longitude: ' + matches![1] + ', GARS: ' + gars);
     }
@@ -291,11 +291,11 @@ export class GARS {
 
     const quadrantValue = matches![3];
     if (quadrantValue) {
-      quadrant = Number.parseInt(quadrantValue);
+      quadrant = Number.parseInt(quadrantValue, 10);
 
       const keypadValue = matches![4];
       if (keypadValue) {
-        keypad = Number.parseInt(keypadValue);
+        keypad = Number.parseInt(keypadValue, 10);
       }
     }
 

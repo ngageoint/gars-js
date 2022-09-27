@@ -62,7 +62,7 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
    * @return true if the type
    */
   public isType(type: GridType): boolean {
-    return this.type == type;
+    return this.type === type;
   }
 
   /**
@@ -153,7 +153,7 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
   public getColor(gridType?: GridType): Color | undefined {
     let color: Color | undefined;
     if (gridType) {
-      let style = this.getStyle(gridType);
+      const style = this.getStyle(gridType);
       if (style) {
         color = style.getColor();
       }
@@ -188,7 +188,7 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
    */
   public getWidth(gridType?: GridType): number {
     let width = 0;
-    let style = this.getStyle(gridType);
+    const style = this.getStyle(gridType);
     if (style) {
       width = style.getWidth();
     }
@@ -329,7 +329,7 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
     if (d1 < d2) return -1; // Neither val is NaN, thisVal is smaller
     if (d1 > d2) return 1; // Neither val is NaN, thisVal is larger
 
-    return d1 == d2
+    return d1 === d2
       ? 0 // Values are equal
       : d1 < d2
       ? -1 // (-0.0, 0.0) or (!NaN, NaN)

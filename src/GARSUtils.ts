@@ -167,7 +167,7 @@ export class GARSUtils {
    * @return 0 for quadrants 1|3, 1 for quadrants 2|4
    */
   public static quadrantColumn(quadrant: number): number {
-    return quadrant % 2 == 0 ? 1 : 0;
+    return quadrant % 2 === 0 ? 1 : 0;
   }
 
   /**
