@@ -41,9 +41,15 @@ export class GridTypeUtils {
      * @return grid types less precise
      */
     public static lessPrecise(type: GridType): Set<GridType> {
-        const types = Arrays.copyOfRange(GridTypeUtils.values(), 0,
-            type.ordinal());
-        return new Set<GridType>(types);
+        const values = GridTypeUtils.values();
+        const ordinal = Object.keys(GridType).indexOf(type.toString());
+
+        const types = new Set<GridType>();
+        for (let i = 0; i < ordinal; i++) {
+            types.add(values[i]);
+        }
+
+        return types;
     }
 
     /**
@@ -55,14 +61,18 @@ export class GridTypeUtils {
      */
     public static morePrecise(type: GridType): Set<GridType> {
         const values = GridTypeUtils.values();
-        const types = Arrays.copyOfRange(values, type.ordinal() + 1,
-            values.length);
-        return new Set<GridType>(types);
+        const ordinal = Object.keys(GridType).indexOf(type.toString());
+
+        const types = new Set<GridType>();
+        for (let i = ordinal; i < values.length; i++) {
+            types.add(values[i]);
+        }
+        return types;
     }
 
     public static values(): GridType[] {
         const gridTypes: GridType[] = [];
-        for(const type of Object.keys(GridType)) {
+        for (const type of Object.keys(GridType)) {
             gridTypes.push(GridType[type as keyof typeof GridType]);
         }
         return gridTypes;
