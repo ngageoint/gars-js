@@ -1,10 +1,11 @@
 import { Color } from "@ngageoint/color-js";
-import { GridStyle, PropertyConstants } from "@ngageoint/grid-js";
+import { BaseGrids, GridStyle, PropertyConstants } from "@ngageoint/grid-js";
 import { GARSProperties } from "../property/GARSProperties";
 import { GARSLabeler } from "./GARSLabeler";
 import { Grid } from "./Grid";
 import { GridLabeler } from "./GridLabeler";
 import { GridType } from "./GridType";
+import { GridTypeUtils } from "./GridTypeUtils";
 import { ZoomGrids } from "./ZoomGrids";
 
 /**
@@ -17,25 +18,16 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
     /**
      * Grids
      */
-    private grids = new Map<GridType, Grid>;
-
-    /**
-     * Create with all grid types enabled
-     * 
-     * @return grids
-     */
-    public static create(): Grids {
-        return new Grids();
-    }
+    private gridMap = new Map<GridType, Grid>;
 
     /**
      * Create with grids to enable
      * 
      * @param types
-     *            grid types to enable
+     *            grid types to enable or all grid types enabled if null
      * @return grids
      */
-    public static create(types: GridType[]): Grids {
+    public static create(types?: GridType[]): Grids {
         return new Grids(types);
     }
 
@@ -51,9 +43,15 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
         // createGrids();
         this.createGrids(false);
 
-        for (const type in types) {
-            this.getGrid(type).setEnabled(true);
+        if (types) {
+            for (const type of types) {
+                const grid = this.getGrid(type);
+                if (grid) {
+                    grid.setEnabled(true);
+                }
+            }
         }
+
 
         this.createZoomGrids();
     }
@@ -62,14 +60,20 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      * {@inheritDoc}
      */
     public getDefaultWidth(): number {
-        return Grid.DEFAULT_WIDTH;
+        return Grid.DEFAULT_WIDTH!;
     }
 
     /**
      * {@inheritDoc}
      */
-    public grids(): IterableIterator<Grid> {
-        return this.grids.values();
+    public grids(): Grid[] {
+        const result: Grid[] = [];
+
+        for (const grid of this.gridMap.values()) {
+            result.push(grid);
+        }
+
+        return result;
     }
 
     /**
@@ -100,18 +104,18 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
 
         const propagate = this.properties.getBooleanProperty(false,
             PropertyConstants.GRIDS, PropertyConstants.PROPAGATE);
-        let styles: Map<GridType, GridStyle> | null = null;
-        if (propagate != null && propagate) {
-            styles = new  Map<GridType, GridStyle>();
+        let styles: Map<GridType, GridStyle> | undefined;
+        if (propagate !== undefined && propagate !== null && propagate) {
+            styles = new Map<GridType, GridStyle>();
         }
 
-        this.createGrid(GridType.TWENTY_DEGREE, styles, enabled, new GARSLabeler());
-        this.createGrid(GridType.TEN_DEGREE, styles, enabled, new GARSLabeler());
-        this.createGrid(GridType.FIVE_DEGREE, styles, enabled, new GARSLabeler());
-        this.createGrid(GridType.ONE_DEGREE, styles, enabled, new GARSLabeler());
-        this.createGrid(GridType.THIRTY_MINUTE, styles, enabled, new GARSLabeler());
-        this.createGrid(GridType.FIFTEEN_MINUTE, styles, enabled, new GARSLabeler());
-        this.createGrid(GridType.FIVE_MINUTE, styles, enabled, new GARSLabeler());
+        this.createGrid(GridType.TWENTY_DEGREE, new GARSLabeler(true), styles, enabled);
+        this.createGrid(GridType.TEN_DEGREE, new GARSLabeler(true), styles, enabled);
+        this.createGrid(GridType.FIVE_DEGREE, new GARSLabeler(true), styles, enabled);
+        this.createGrid(GridType.ONE_DEGREE, new GARSLabeler(true), styles, enabled);
+        this.createGrid(GridType.THIRTY_MINUTE, new GARSLabeler(true), styles, enabled);
+        this.createGrid(GridType.FIFTEEN_MINUTE, new GARSLabeler(true), styles, enabled);
+        this.createGrid(GridType.FIVE_MINUTE, new GARSLabeler(true), styles, enabled);
 
     }
 
@@ -127,22 +131,22 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      * @param labeler
      *            grid labeler
      */
-    private createGrid(type: GridType, styles: Map<GridType, GridStyle>,
-        enabled: boolean, labeler: GridLabeler): void {
+    private createGrid(type: GridType, labeler: GridLabeler, styles?: Map<GridType, GridStyle>,
+        enabled?: boolean): void {
 
         const grid = this.newGrid(type);
 
-        const gridKey = type.name().toLowerCase();
+        const gridKey = GridType[type].toLowerCase();
 
-        this.loadGrid(grid, gridKey, enabled, labeler);
+        this.loadGrid(grid, gridKey, labeler, enabled);
 
-        if (styles != null) {
+        if (styles) {
             styles.set(type, GridStyle.style(grid.getColor(), grid.getWidth()));
         }
 
-        this.loadGridStyles(grid, styles, gridKey);
+        this.loadGridStyles(grid, gridKey, styles);
 
-        this.grids.set(type, grid);
+        this.gridMap.set(type, grid);
     }
 
     /**
@@ -155,26 +159,25 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      * @param gridKey
      *            grid key
      */
-    private loadGridStyles(grid: Grid, styles: Map<GridType, GridStyle>,
-        gridKey: string): void {
+    private loadGridStyles(grid: Grid, gridKey: string, styles?: Map<GridType, GridStyle>): void {
         const precision = grid.getPrecision();
         if (precision < GridType.TWENTY_DEGREE) {
-            this.loadGridStyle(grid, styles, gridKey, GridType.TWENTY_DEGREE);
+            this.loadGridStyle(grid, gridKey, GridType.TWENTY_DEGREE, styles);
         }
         if (precision < GridType.TEN_DEGREE) {
-            this.loadGridStyle(grid, styles, gridKey, GridType.TEN_DEGREE);
+            this.loadGridStyle(grid, gridKey, GridType.TEN_DEGREE, styles);
         }
         if (precision < GridType.FIVE_DEGREE) {
-            this.loadGridStyle(grid, styles, gridKey, GridType.FIVE_DEGREE);
+            this.loadGridStyle(grid, gridKey, GridType.FIVE_DEGREE, styles);
         }
         if (precision < GridType.ONE_DEGREE) {
-            this.loadGridStyle(grid, styles, gridKey, GridType.ONE_DEGREE);
+            this.loadGridStyle(grid, gridKey, GridType.ONE_DEGREE, styles);
         }
         if (precision < GridType.THIRTY_MINUTE) {
-            this.loadGridStyle(grid, styles, gridKey, GridType.THIRTY_MINUTE);
+            this.loadGridStyle(grid, gridKey, GridType.THIRTY_MINUTE, styles);
         }
         if (precision < GridType.FIFTEEN_MINUTE) {
-            this.loadGridStyle(grid, styles, gridKey, GridType.FIFTEEN_MINUTE);
+            this.loadGridStyle(grid, gridKey, GridType.FIFTEEN_MINUTE, styles);
         }
     }
 
@@ -190,10 +193,9 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      * @param gridType
      *            style grid type
      */
-    private loadGridStyle(grid: Grid, styles: Map<GridType, GridStyle>,
-        gridKey: string, gridType: GridType): void {
+    private loadGridStyle(grid: Grid, gridKey: string, gridType: GridType, styles?: Map<GridType, GridStyle>): void {
 
-        const gridKey2 = gridType.name().toLowerCase();
+        const gridKey2 = GridType[gridType].toLowerCase();
 
         let color = this.loadGridStyleColor(gridKey, gridKey2);
         let width = this.loadGridStyleWidth(gridKey, gridKey2);
@@ -213,10 +215,10 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
             }
         }
 
-        if (color  || width) {
+        if (color || width) {
 
-            const style = this.getGridStyle(color, width, grid);
-            grid.setStyle(gridType, style);
+            const style = this.getGridStyle(grid, color, width);
+            grid.setStyle(style, gridType);
 
             if (styles) {
                 styles.set(gridType, style);
@@ -233,7 +235,7 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      * @return grid
      */
     public getGrid(type: GridType): Grid | undefined {
-        return this.grids.get(type);
+        return this.gridMap.get(type);
     }
 
     /**
@@ -243,28 +245,13 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      *            zoom level
      * @return grid type precision
      */
-    public getPrecision(zoom: number): GridType {
-        return this.getGrids(zoom).getPrecision();
-    }
-
-    /**
-     * Set the active grid types
-     * 
-     * @param types
-     *            grid types
-     */
-    public setGrids(types: GridType[]): void {
-        this.setGridTypes(types);
-    }
-
-    /**
-     * Set the active grids
-     * 
-     * @param grids
-     *            grids
-     */
-    public setGrids(grids: Grid[]): void {
-        this.setGrids(grids);
+    public getPrecision(zoom: number): GridType | undefined {
+        const grids = this.getGrids(zoom);
+        let precision: GridType | undefined;
+        if (grids) {
+            precision = grids.getPrecision();
+        }
+        return precision;
     }
 
     /**
@@ -274,12 +261,17 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      *            grid types
      */
     public setGridTypes(types: GridType[]): void {
-        const disableTypes = new Set<GridType>(GridType.values());
-        for (const gridType in types) {
-            this.enable(gridType);
-            disableTypes.remove(gridType);
+        const disableTypes = new Set<string>(Object.keys(GridType));
+        
+        for (const gridType of types) {
+            this.enableByType(gridType);
+            disableTypes.delete(GridType[gridType]);
         }
-        this.disableTypes(disableTypes);
+        const enums: GridType[] = [];
+        for(const disableType of disableTypes) {
+            enums.push(GridType[disableType as keyof typeof GridType]);
+        }
+        this.disableTypes(enums);
     }
 
     /**
@@ -289,12 +281,16 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      *            grids
      */
     public setGrids(grids: Grid[]): void {
-        const disableTypes = new Set<GridType>(GridType.values());
-        for (const grid in grids) {
+        const disableTypes = new Set<string>(Object.keys(GridType));
+        for (const grid of grids) {
             this.enable(grid);
-            disableTypes.delete(grid.getType());
+            disableTypes.delete(GridType[grid.getType()]);
         }
-        this.disableTypes(disableTypes);
+        const enums: GridType[] = [];
+        for(const disableType of disableTypes) {
+            enums.push(GridType[disableType as keyof typeof GridType]);
+        }
+        this.disableTypes(enums);
     }
 
     /**
@@ -304,8 +300,8 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      *            grid types
      */
     public enableTypes(types: GridType[]): void {
-        for (const type in types) {
-            this.enable(type);
+        for (const type of types) {
+            this.enableByType(type);
         }
     }
 
@@ -316,8 +312,8 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      *            grid types
      */
     public disableTypes(types: GridType[]): void {
-        for (const type in types) {
-            this.disable(type);
+        for (const type of types) {
+            this.disableByType(type);
         }
     }
 
@@ -338,8 +334,8 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      * @param type
      *            grid type
      */
-    public enable(type: GridType): void {
-        this.enable(this.getGrid(type));
+    public enableByType(type: GridType): void {
+        this.enable(this.getGrid(type)!);
     }
 
     /**
@@ -348,8 +344,8 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      * @param type
      *            grid type
      */
-    public disable(type: GridType): void {
-        this.disable(this.getGrid(type));
+    public disableByType(type: GridType): void {
+        this.disable(this.getGrid(type)!);
     }
 
     /**
@@ -360,8 +356,8 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      * @param minZoom
      *            minimum zoom
      */
-    public setMinZoom(type: GridType, minZoom: number): void {
-        this.setMinZoom(this.getGrid(type), minZoom);
+    public setMinZoomByType(type: GridType, minZoom: number): void {
+        super.setMinZoom(this.getGrid(type)!, minZoom);
     }
 
     /**
@@ -372,8 +368,8 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      * @param maxZoom
      *            maximum zoom
      */
-    public setMaxZoom(type: GridType, maxZoom: number): void {
-        this.setMaxZoom(this.getGrid(type), maxZoom);
+    public setMaxZoomByType(type: GridType, maxZoom: number): void {
+        super.setMaxZoom(this.getGrid(type)!, maxZoom);
     }
 
     /**
@@ -386,8 +382,8 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      * @param maxZoom
      *            maximum zoom
      */
-    public setZoomRange(type: GridType, minZoom: number, maxZoom: number): void {
-        this.setZoomRange(this.getGrid(type), minZoom, maxZoom);
+    public setZoomRangeByType(type: GridType, minZoom: number, maxZoom: number): void {
+        super.setZoomRange(this.getGrid(type)!, minZoom, maxZoom);
     }
 
     /**
@@ -421,33 +417,7 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      *            grid line color
      */
     public setAllColors(color: Color): void {
-        this.setColor(color, GridType.values());
-    }
-
-    /**
-     * Set the grid line color for the grid types
-     * 
-     * @param color
-     *            grid line color
-     * @param types
-     *            grid types
-     */
-    public setColor(color: Color, types: GridType[]): void {
-        for (const type of types) {
-            this.setColor(type, color);
-        }
-    }
-
-    /**
-     * Set the grid line color for the grid type
-     * 
-     * @param type
-     *            grid type
-     * @param color
-     *            grid line color
-     */
-    public setColor(type: GridType, color: Color): void {
-        this.getGrid(type)!.setColor(color);
+        this.setColor(GridTypeUtils.values(), color);
     }
 
     /**
@@ -457,41 +427,9 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      *            grid line width
      */
     public setAllWidths(width: number): void {
-        this.setWidth(width, GridType.values());
+        this.setWidth(GridTypeUtils.values(), width);
     }
 
-    /**
-     * Set the grid line width for the grid types
-     * 
-     * @param width
-     *            grid line width
-     * @param types
-     *            grid types
-     */
-    public setWidth(width: number, types: GridType[]): void {
-        for (const type of types) {
-            this.setWidth(type, width);
-        }
-    }
-
-    /**
-     * Set the grid line width for the grid type
-     * 
-     * @param type
-     *            grid type
-     * @param width
-     *            grid line width
-     */
-    public setWidth(type: GridType, width: number): void {
-        this.getGrid(type)!.setWidth(width);
-    }
-
-    /**
-     * Delete propagated styles
-     */
-    public deletePropagatedStyles(): void {
-        this.deletePropagatedStyles(GridType.values());
-    }
 
     /**
      * Delete propagated styles for the grid types
@@ -499,20 +437,13 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      * @param types
      *            grid types
      */
-    public deletePropagatedStyles(types: GridType[]): void {
-        for (const type of types) {
-            this.deletePropagatedStyles(type);
+    public deletePropagatedStyles(types?: GridType[]): void {
+        if(!types) {
+            types = GridTypeUtils.values();
         }
-    }
-
-    /**
-     * Delete propagated styles for the grid type
-     * 
-     * @param type
-     *            grid type
-     */
-    public deletePropagatedStyles(type: GridType): void {
-        this.getGrid(type)!.clearPrecisionStyles();
+        for (const type of types!) {
+            this.getGrid(type)!.clearPrecisionStyles();
+        }
     }
 
     /**
@@ -520,47 +451,24 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      * 
      * @param types
      *            grid types
-     * @param precisionType
-     *            precision grid type
-     * @param color
-     *            grid line color
-     */
-    public setColor(types: GridType[], precisionType: GridType,
-        color: Color): void {
-        for (const type of types) {
-            this.setColor(type, precisionType, color);
-        }
-    }
-
-    /**
-     * Set the grid type precision line colors for the grid type
-     * 
-     * @param type
-     *            grid type
-     * @param color
-     *            grid line color
      * @param precisionTypes
      *            precision grid types
-     */
-    public setColor(type: GridType, color: Color,
-        precisionTypes: GridType[]): void {
-        for (const precisionType of precisionTypes) {
-            this.setColor(type, precisionType, color);
-        }
-    }
-
-    /**
-     * Set the grid type precision line color for the grid type
-     * 
-     * @param type
-     *            grid type
-     * @param precisionType
-     *            precision grid type
      * @param color
      *            grid line color
      */
-    public setColor(type: GridType, precisionType: GridType, color: Color): void {
-        this.getGrid(type)!.setColor(precisionType, color);
+    public setColor(types: GridType[], color: Color, precisionTypes?: GridType[]): void {
+        if (precisionTypes) {
+            for (const precisionType of precisionTypes) {
+                for (const type of types) {
+                    this.getGrid(type)!.setColor(color, precisionType);
+                }
+            }
+        } else {
+            for (const type of types) {
+                this.getGrid(type)!.setColor(color);
+            }
+        }
+
     }
 
     /**
@@ -573,42 +481,21 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      * @param width
      *            grid line width
      */
-    public setWidth(types: GridType[], precisionType: GridType,
-        width: number): void {
-        for (const type of types) {
-            this.setWidth(type, precisionType, width);
+    public setWidth(types: GridType[],
+        width: number, precisionTypes?: GridType[]): void {
+        if (precisionTypes) {
+            for (const precisionType of precisionTypes) {
+                for (const type of types) {
+                    this.getGrid(type)!.setWidth(width, precisionType);
+                }
+            }
+        } else {
+            for (const type of types) {
+                this.getGrid(type)!.setWidth(width);
+            }
         }
-    }
 
-    /**
-     * Set the grid type precision line widths for the grid type
-     * 
-     * @param type
-     *            grid type
-     * @param width
-     *            grid line width
-     * @param precisionTypes
-     *            precision grid types
-     */
-    public setWidth(type: GridType, width: number,
-        precisionTypes: GridType[]): void {
-        for (const precisionType of precisionTypes) {
-            this.setWidth(type, precisionType, width);
-        }
-    }
 
-    /**
-     * Set the grid type precision line width for the grid type
-     * 
-     * @param type
-     *            grid type
-     * @param precisionType
-     *            precision grid type
-     * @param width
-     *            grid line width
-     */
-    public setWidth(type: GridType, precisionType: GridType, width: number): void {
-        this.getGrid(type)!.setWidth(precisionType, width);
     }
 
     /**
@@ -649,7 +536,7 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      * Disable all grid labelers
      */
     public disableAllLabelers(): void {
-        this.disableLabelers(GridType.values());
+        this.disableLabelers(GridTypeUtils.values());
     }
 
     /**
@@ -790,7 +677,7 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      */
     public setLabelBuffer(buffer: number, types: GridType[]): void {
         for (const type of types) {
-            this.setLabelBuffer(type, buffer);
+            this.getRequiredLabeler(type).setBuffer(buffer);
         }
     }
 
@@ -806,27 +693,15 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
     }
 
     /**
-     * Set the label grid edge buffer
-     * 
-     * @param type
-     *            grid type
-     * @param buffer
-     *            label buffer (greater than or equal to 0.0 and less than 0.5)
-     */
-    public setLabelBuffer(type: GridType, buffer: number): void {
-        this.getRequiredLabeler(type).setBuffer(buffer);
-    }
-
-    /**
      * Set all label colors
      * 
      * @param color
      *            label color
      */
     public setAllLabelColors(color: Color): void {
-        for (const grid of this.grids.values()) {
+        for (const grid of this.gridMap.values()) {
             if (grid.hasLabeler()) {
-                this.setLabelColor(grid.getType(), color);
+                this.setLabelColor(color, [grid.getType()]);
             }
         }
     }
@@ -841,20 +716,8 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      */
     public setLabelColor(color: Color, types: GridType[]): void {
         for (const type of types) {
-            this.setLabelColor(type, color);
+            this.getRequiredLabeler(type).setColor(color);
         }
-    }
-
-    /**
-     * Set the label color
-     * 
-     * @param type
-     *            grid type
-     * @param color
-     *            label color
-     */
-    public setLabelColor(type: GridType, color: Color): void {
-        this.getRequiredLabeler(type).setColor(color);
     }
 
     /**
@@ -864,9 +727,9 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      *            label text size
      */
     public setAllLabelTextSizes(textSize: number): void {
-        for (const grid of this.grids.values()) {
+        for (const grid of this.gridMap.values()) {
             if (grid.hasLabeler()) {
-                this.setLabelTextSize(grid.getType(), textSize);
+                this.setLabelTextSize(textSize, [grid.getType()]);
             }
         }
     }
@@ -881,20 +744,8 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
      */
     public setLabelTextSize(textSize: number, types: GridType[]): void {
         for (const type of types) {
-            this.setLabelTextSize(type, textSize);
+            this.getRequiredLabeler(type).setTextSize(textSize);
         }
-    }
-
-    /**
-     * Set the label text size
-     * 
-     * @param type
-     *            grid type
-     * @param textSize
-     *            label text size
-     */
-    public setLabelTextSize(type: GridType, textSize: number): void {
-        this.getRequiredLabeler(type).setTextSize(textSize);
     }
 
 }
