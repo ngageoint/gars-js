@@ -1,4 +1,4 @@
-import { GridProperties } from "@ngageoint/grid-js";
+import { GridProperties } from '@ngageoint/grid-js';
 
 /**
  * GARS property loader
@@ -6,31 +6,29 @@ import { GridProperties } from "@ngageoint/grid-js";
  * @author osbornb
  */
 export class GARSProperties extends GridProperties {
+  /**
+   * Property file name
+   */
+  public static readonly PROPERTIES_FILE = 'gars.properties';
 
-    /**
-     * Property file name
-     */
-    public static readonly PROPERTIES_FILE = "gars.properties";
+  /**
+   * Singleton instance
+   */
+  public static instance = new GARSProperties();
 
-    /**
-     * Singleton instance
-     */
-    public static instance = new GARSProperties();
+  /**
+   * Get the singleton instance
+   *
+   * @return instance
+   */
+  public static getInstance(): GARSProperties {
+    return GARSProperties.instance;
+  }
 
-    /**
-     * Get the singleton instance
-     * 
-     * @return instance
-     */
-    public static getInstance(): GARSProperties {
-        return GARSProperties.instance;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public getFile(): string {
-        return GARSProperties.PROPERTIES_FILE;
-    }
-
+  /**
+   * {@inheritDoc}
+   */
+  public getFile(): string {
+    return GARSProperties.PROPERTIES_FILE;
+  }
 }

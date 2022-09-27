@@ -96,14 +96,13 @@ export class BandNumberRange implements IterableIterator<number> {
     if (this.bandNumber <= this.east) {
       return {
         done: true,
-        value: null
-      }
+        value: null,
+      };
     } else {
       return {
         done: false,
-        value: this.bandNumber++
-      }
-
+        value: this.bandNumber++,
+      };
     }
   }
 

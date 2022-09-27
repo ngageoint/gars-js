@@ -117,17 +117,16 @@ export class BandLettersRange implements IterableIterator<string> {
   }
 
   public next(): IteratorResult<string> {
-
-    if(this.value <= this.maxValue) {
+    if (this.value <= this.maxValue) {
       return {
         done: true,
-        value: null
-      }
+        value: null,
+      };
     } else {
       return {
         done: false,
-        value: GARSUtils.bandLetters(this.value++)
-      }
+        value: GARSUtils.bandLetters(this.value++),
+      };
     }
   }
 

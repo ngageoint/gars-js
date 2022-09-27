@@ -7,7 +7,6 @@ import { GridType } from '../grid/GridType';
  * @author osbornb
  */
 export class GridLine extends Line {
-
   /**
    * Grid type the line represents if any
    */
