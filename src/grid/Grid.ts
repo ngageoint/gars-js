@@ -1,5 +1,6 @@
 import { Color } from "@ngageoint/color-js";
 import { BaseGrid, Bounds, GridStyle, GridTile, Point, PropertyConstants } from "@ngageoint/grid-js";
+import { Comparable } from "@ngageoint/simple-features-js";
 import { GridLine } from "../features/GridLine";
 import { GARSUtils } from "../GARSUtils";
 import { GARSProperties } from "../property/GARSProperties";
@@ -78,13 +79,16 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
      *            grid type
      * @return grid type line style
      */
-    public getStyle(gridType: GridType): GridStyle {
-        let style: GridStyle;
-        if (gridType === this.type) {
-            style = this.getStyle();
-        } else {
-            style = this.styles.get(gridType);
+    public getStyle(gridType?: GridType): GridStyle | undefined {
+        let style: GridStyle | undefined;
+        if (gridType) {
+            if (gridType === this.type) {
+                style = super.getStyle();
+            } else {
+                style = this.styles.get(gridType);
+            }
         }
+
         return style;
     }
 
@@ -98,10 +102,10 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
     private getOrCreateStyle(gridType: GridType): GridStyle {
         let style = this.getStyle(gridType);
         if (style === null) {
-            style = new GridStyle();
-            this.setStyle(gridType, style);
+            style = new GridStyle(undefined, 0);
+            this.setStyle(style, gridType);
         }
-        return style;
+        return style!;
     }
 
     /**
@@ -112,16 +116,18 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
      * @param style
      *            grid line style
      */
-    public setStyle(gridType: GridType, style: GridStyle): void {
-        if (gridType < this.getPrecision()) {
-            throw new Error(
-                "Grid can not define a style for a higher precision grid type. Type: "
-                + this.type + ", Style Type: " + gridType);
-        }
-        if (gridType === this.type) {
-            this.setStyle(style);
-        } else {
-            this.styles.set(gridType, style != null ? style : new GridStyle());
+    public setStyle(style: GridStyle, gridType?: GridType): void {
+        if (gridType) {
+            if (gridType < this.getPrecision()) {
+                throw new Error(
+                    "Grid can not define a style for a higher precision grid type. Type: "
+                    + this.type + ", Style Type: " + gridType);
+            }
+            if (gridType === this.type) {
+                super.setStyle(style);
+            } else {
+                this.styles.set(gridType, style != null ? style : new GridStyle(undefined, 0));
+            }
         }
     }
 
@@ -139,15 +145,18 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
      *            grid type
      * @return grid type line color
      */
-    public getColor(gridType: GridType): Color | undefined {
+    public getColor(gridType?: GridType): Color | undefined {
         let color: Color | undefined;
-        let style = this.getStyle(gridType);
-        if (style !== null) {
-            color = style.getColor();
+        if (gridType) {
+            let style = this.getStyle(gridType);
+            if (style) {
+                color = style.getColor();
+            }
+            if (!color) {
+                color = super.getColor();
+            }
         }
-        if (color === null) {
-            color = super.getColor();
-        }
+
         return color;
     }
 
@@ -159,8 +168,10 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
      * @param color
      *            grid line color
      */
-    public setColor(gridType: GridType, color: Color): void {
-        this.getOrCreateStyle(gridType).setColor(color);
+    public setColor(color?: Color, gridType?: GridType): void {
+        if (gridType) {
+            this.getOrCreateStyle(gridType).setColor(color);
+        }
     }
 
     /**
@@ -170,14 +181,14 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
      *            grid type
      * @return grid type line width
      */
-    public getWidth(gridType: GridType): number {
+    public getWidth(gridType?: GridType): number {
         let width = 0;
         let style = this.getStyle(gridType);
-        if (style !== null) {
+        if (style) {
             width = style.getWidth();
         }
         if (width === 0) {
-            width = this.getWidth();
+            width = super.getWidth();
         }
         return width;
     }
@@ -190,8 +201,10 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
      * @param width
      *            grid line width
      */
-    public setWidth(gridType: GridType, width: number): void {
-        this.getOrCreateStyle(gridType).setWidth(width);
+    public setWidth(width: number, gridType?: GridType): void {
+        if (gridType) {
+            this.getOrCreateStyle(gridType).setWidth(width);
+        }
     }
 
     /**
@@ -220,12 +233,12 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
      *            tile
      * @return lines
      */
-    public getLines(tile: GridTile): GridLine[] {
-        return this.getLines(tile.getZoom(), tile.getBounds());
+    public getLinesFromGridTile(tile: GridTile): GridLine[] | undefined {
+        return this.getLines(tile.getZoom(), tile.getBounds()!);
     }
 
     /**
-     * Get the lines for the zoom and tile bounds
+     * Get the lines for the tile bounds
      * 
      * @param zoom
      *            zoom level
@@ -233,24 +246,13 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
      *            tile bounds
      * @return lines
      */
-    public getLines(zoom: number, tileBounds: Bounds): GridLine[] | null {
-        let lines: GridLine[] | null = null;
-        if (this.isLinesWithin(zoom)) {
-            lines = this.getLines(tileBounds);
-        }
-        return lines;
-    }
-
-    /**
-     * Get the lines for the tile bounds
-     * 
-     * @param tileBounds
-     *            tile bounds
-     * @return lines
-     */
-    public getLines(tileBounds: Bounds): GridLine[] {
+    public getLines(zoom: number, tileBounds: Bounds): GridLine[] | undefined {
 
         const lines: GridLine[] = [];
+
+        if (!this.isLinesWithin(zoom)) {
+            return undefined;
+        }
 
         const precision = this.getPrecision();
 
@@ -293,8 +295,8 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
      *            tile
      * @return labels
      */
-    public getLabels(tile: GridTile): GridLabel[] {
-        return this.getLabels(tile.getZoom(), tile.getBounds());
+    public getLabelsFromGridTile(tile: GridTile): GridLabel[] | undefined {
+        return this.getLabels(tile.getZoom(), tile.getBounds()!);
     }
 
     /**
@@ -306,8 +308,8 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
      *            tile bounds
      * @return labels
      */
-    public getLabels(zoom: number, tileBounds: Bounds): GridLabel[] {
-        let labels: GridLabel[] | null = null;
+    public getLabels(zoom: number, tileBounds: Bounds): GridLabel[] | undefined {
+        let labels: GridLabel[] | undefined;
         if (this.isLabelerWithin(zoom)) {
             labels = this.getLabeler().getLabels(tileBounds, this.type);
         }
@@ -318,7 +320,17 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
      * {@inheritDoc}
      */
     public compareTo(other: Grid): number {
-        return Double.compare(this.getPrecision(), other.getPrecision());
+        const d1 = this.getPrecision();
+        const d2 = other.getPrecision();
+
+        if (d1 < d2)
+            return -1;           // Neither val is NaN, thisVal is smaller
+        if (d1 > d2)
+            return 1;            // Neither val is NaN, thisVal is larger
+
+        return (d1 == d2 ? 0 : // Values are equal
+            (d1 < d2 ? -1 : // (-0.0, 0.0) or (!NaN, NaN)
+                1));                          // (0.0, -0.0) or (NaN, !NaN)
     }
 
     /**
@@ -331,7 +343,7 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
             return false;
         if (typeof this !== typeof obj)
             return false;
-		const other = obj as Grid;
+        const other = obj as Grid;
         if (this.type !== other.type)
             return false;
         return true;
