@@ -286,7 +286,7 @@ describe('GARS Tests', function () {
             expect(gars.getQuadrant()).to.equal(GARSConstants.DEFAULT_QUADRANT);
             expect(gars.getKeypad()).to.equal(GARSConstants.DEFAULT_KEYPAD);
 
-            let point = gars.toPoint();
+            const point = gars.toPoint();
 
             expect(point.getLongitude()).to.be.approximately(lon, 0);
             expect(point.getLatitude()).to.be.approximately(lat, 0);
