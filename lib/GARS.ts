@@ -2,6 +2,7 @@ import { Point } from '@ngageoint/grid-js';
 import { GARSConstants } from './GARSConstants';
 import { GARSUtils } from './GARSUtils';
 import { GridType } from './grid/GridType';
+import * as sprintf from "sprintf-js";
 
 /**
  * Global Area Reference System Coordinate
@@ -119,8 +120,7 @@ export class GARS {
    * @return GARS coordinate
    */
   public coordinate(type = GridType.FIVE_MINUTE): string {
-    // TODO figure out this format
-    let gars = ''; // String.format("%03d", this.longitude);
+    let gars = sprintf.sprintf("%03d", this.longitude.toString()); 
     gars += this.latitude;
 
     if (type === GridType.FIFTEEN_MINUTE || type === GridType.FIVE_MINUTE) {
@@ -242,19 +242,31 @@ export class GARS {
     const lon = GARSUtils.getLongitudeDecimalBand(longitude);
     const lat = GARSUtils.getLatitudeDecimalBandValue(latitude);
 
-    const latBand = GARSUtils.bandLetters(lat);
+    const lonInt = ~~lon;
+		const latInt = ~~lat;
 
-    const quadrantColumn = lon * 2.0;
-    const quadrantRow = lat * 2.0;
+    const latBand = GARSUtils.bandLetters(latInt);
 
-    const quadrant = GARSUtils.quadrant(quadrantColumn, quadrantRow);
+    let lonDecimal = lon - lonInt;
+		let latDecimal = lat - latInt;
 
-    const keypadColumn = quadrantColumn * 3.0;
-    const keypadRow = quadrantRow * 3.0;
+    const quadrantColumn = lonDecimal * 2.0;
+    const quadrantRow = latDecimal * 2.0;
+
+    const quadrantColumnInt = ~~quadrantColumn;
+		const quadrantRowInt = ~~quadrantRow;
+
+    const quadrant = GARSUtils.quadrant(quadrantColumnInt, quadrantRowInt);
+
+    lonDecimal = quadrantColumn - quadrantColumnInt;
+		latDecimal = quadrantRow - quadrantRowInt;
+
+    const keypadColumn = ~~(lonDecimal * 3.0);
+    const keypadRow = ~~(latDecimal * 3.0);
 
     const keypad = GARSUtils.keypad(keypadColumn, keypadRow);
 
-    return GARS.create(lon, latBand, quadrant, keypad);
+    return GARS.create(lonInt, latBand, quadrant, keypad);
   }
 
   /**
