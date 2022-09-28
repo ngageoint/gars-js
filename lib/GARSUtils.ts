@@ -100,6 +100,11 @@ export class GARSUtils {
    * @return number band value
    */
   public static bandValue(latitudeBand: string): number {
+
+    if (latitudeBand.length === 1) {
+      return this.bandValueFromChar(latitudeBand.charCodeAt(0));
+    }
+
     const latitude = latitudeBand.toUpperCase();
     const latitude1 = this.bandValueFromChar(latitude.charCodeAt(0));
     const latitude2 = this.bandValueFromChar(latitude.charCodeAt(1));
