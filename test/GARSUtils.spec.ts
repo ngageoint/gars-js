@@ -1,5 +1,5 @@
 import { expect } from 'chai';
-import { GARSUtils } from '../src/GARSUtils';
+import { GARSUtils } from '../lib/GARSUtils';
 
 describe('GARSUtils Tests', function () {
   it('test band value', function () {
