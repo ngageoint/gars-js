@@ -1,9 +1,9 @@
 'use strict';
 
 module.exports = {
-    extension: ['ts'],
+    extensions: ['ts', 'js'],
     ignore: ['node_modules'],
     recursive: true,
     require: ['ts-node/register'],
-    spec: ['test/*.spec.ts']
+    spec: ["test/**/*.spec.*"]
 };
