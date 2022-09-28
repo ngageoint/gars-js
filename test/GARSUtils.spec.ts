@@ -36,4 +36,19 @@ describe('GARSUtils Tests', function () {
 		expect(GARSUtils.quadrant(0, 0)).to.equal(3);
 		expect(GARSUtils.quadrant(1, 0)).to.equal(4);
   });
+
+  /**
+	 * Test keypad
+	 */
+   it('test keypad', function () {
+    expect(GARSUtils.keypad(0, 2)).to.equal(1);
+		expect(GARSUtils.keypad(1, 2)).to.equal(2);
+		expect(GARSUtils.keypad(2, 2)).to.equal(3);
+		expect(GARSUtils.keypad(0, 1)).to.equal(4);
+		expect(GARSUtils.keypad(1, 1)).to.equal(5);
+		expect(GARSUtils.keypad(2, 1)).to.equal(6);
+		expect(GARSUtils.keypad(0, 0)).to.equal(7);
+		expect(GARSUtils.keypad(1, 0)).to.equal(8);
+		expect(GARSUtils.keypad(2, 0)).to.equal(9);
+  });
 });
