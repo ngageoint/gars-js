@@ -191,4 +191,29 @@ describe('GARS Tests', function () {
         //expect(gars2).to.equal(gars);
         //expect(gars2.coordinate()).to.equal(garsValue);
     });
+
+    /**
+	 * Test parsing an invalid GARS string value
+	 */
+     it('test parse invalid', function () {
+        expect(GARS.isGARS("1AA")).to.be.false;
+		expect(GARS.isGARS("01AA")).to.be.false;
+		expect(GARS.isGARS("001A")).to.be.false;
+		expect(GARS.isGARS("000AA")).to.be.false;
+		expect(GARS.isGARS("721AA")).to.be.false;
+		expect(GARS.isGARS("001RA")).to.be.false;
+		expect(GARS.isGARS("720ZZ")).to.be.false;
+		expect(GARS.isGARS("000AG3")).to.be.false;
+		expect(GARS.isGARS("721AG3")).to.be.false;
+		expect(GARS.isGARS("006RA3")).to.be.false;
+		expect(GARS.isGARS("006ZZ3")).to.be.false;
+		expect(GARS.isGARS("000AG39")).to.be.false;
+		expect(GARS.isGARS("721AG39")).to.be.false;
+		expect(GARS.isGARS("006RA39")).to.be.false;
+		expect(GARS.isGARS("006ZZ39")).to.be.false;
+		expect(GARS.isGARS("006AG09")).to.be.false;
+		expect(GARS.isGARS("006AG59")).to.be.false;
+		expect(GARS.isGARS("006AG30")).to.be.false;
+		expect(GARS.isGARS("006AG310")).to.be.false;
+     });
 });
