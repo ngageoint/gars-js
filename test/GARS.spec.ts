@@ -26,7 +26,7 @@ describe('GARS Tests', function () {
         expect(point.getLongitude()).to.be.approximately(-180.0, 0);
         expect(point.getLatitude()).to.be.approximately(-90.0, 0);
         let gars2 = GARS.fromPoint(point);
-        expect(gars2).to.equal(gars);
+        expect(gars2.equals(gars)).to.be.true;
         expect(gars2.coordinate()).to.equal(garsValue + GARSConstants.DEFAULT_QUADRANT
             + GARSConstants.DEFAULT_KEYPAD);
 
@@ -41,7 +41,7 @@ describe('GARS Tests', function () {
         expect(point.getLongitude()).to.be.approximately(-180.0, 0);
         expect(point.getLatitude()).to.be.approximately(-80.0, 0);
         gars2 = GARS.fromPoint(point);
-        expect(gars2).to.equal(gars);
+        expect(gars2.equals(gars)).to.be.true;
         expect(gars2.coordinate()).to.equal(garsValue + GARSConstants.DEFAULT_QUADRANT
             + GARSConstants.DEFAULT_KEYPAD);
 
@@ -56,7 +56,7 @@ describe('GARS Tests', function () {
         expect(point.getLongitude()).to.be.approximately(-180.0, 0);
         expect(point.getLatitude()).to.be.approximately(89.5, 0);
         gars2 = GARS.fromPoint(point);
-        expect(gars2).to.equal(gars);
+        expect(gars2.equals(gars)).to.be.true;
         expect(gars2.coordinate()).to.equal(garsValue + GARSConstants.DEFAULT_QUADRANT
             + GARSConstants.DEFAULT_KEYPAD);
 
@@ -71,7 +71,7 @@ describe('GARS Tests', function () {
         expect(point.getLongitude()).to.be.approximately(-180.0, 0);
         expect(point.getLatitude()).to.be.approximately(79.5, 0);
         gars2 = GARS.fromPoint(point);
-        expect(gars2).to.equal(gars);
+        expect(gars2.equals(gars)).to.be.true;
         expect(gars2.coordinate()).to.equal(garsValue + GARSConstants.DEFAULT_QUADRANT
             + GARSConstants.DEFAULT_KEYPAD);
 
@@ -86,7 +86,7 @@ describe('GARS Tests', function () {
         expect(point.getLongitude()).to.be.approximately(179.5, 0);
         expect(point.getLatitude()).to.be.approximately(-90.0, 0);
         gars2 = GARS.fromPoint(point);
-        expect(gars2).to.equal(gars);
+        expect(gars2.equals(gars)).to.be.true;
         expect(gars2.coordinate()).to.equal(garsValue + GARSConstants.DEFAULT_QUADRANT
             + GARSConstants.DEFAULT_KEYPAD);
 
@@ -101,7 +101,7 @@ describe('GARS Tests', function () {
         expect(point.getLongitude()).to.be.approximately(179.5, 0);
         expect(point.getLatitude()).to.be.approximately(-80.0, 0);
         gars2 = GARS.fromPoint(point);
-        expect(gars2).to.equal(gars);
+        expect(gars2.equals(gars)).to.be.true;
         expect(gars2.coordinate()).to.equal(garsValue + GARSConstants.DEFAULT_QUADRANT
             + GARSConstants.DEFAULT_KEYPAD);
 
@@ -116,7 +116,7 @@ describe('GARS Tests', function () {
         expect(point.getLongitude()).to.be.approximately(179.5, 0);
         expect(point.getLatitude()).to.be.approximately(89.5, 0);
         gars2 = GARS.fromPoint(point);
-        expect(gars2).to.equal(gars);
+        expect(gars2.equals(gars)).to.be.true;
         expect(gars2.coordinate()).to.equal(garsValue + GARSConstants.DEFAULT_QUADRANT
             + GARSConstants.DEFAULT_KEYPAD);
 
@@ -131,7 +131,7 @@ describe('GARS Tests', function () {
         expect(point.getLongitude()).to.be.approximately(179.5, 0);
         expect(point.getLatitude()).to.be.approximately(79.5, 0);
         gars2 = GARS.fromPoint(point);
-        expect(gars2).to.equal(gars);
+        expect(gars2.equals(gars)).to.be.true;
         expect(gars2.coordinate()).to.equal(garsValue + GARSConstants.DEFAULT_QUADRANT
             + GARSConstants.DEFAULT_KEYPAD);
 
@@ -146,7 +146,7 @@ describe('GARS Tests', function () {
         expect(point.getLongitude()).to.be.approximately(-177.5, 0);
         expect(point.getLatitude()).to.be.approximately(-87.0, 0);
         gars2 = GARS.fromPoint(point);
-        expect(gars2).to.equal(gars);
+        expect(gars2.equals(gars)).to.be.true;
         expect(gars2.coordinate()).to.equal(garsValue + GARSConstants.DEFAULT_QUADRANT
             + GARSConstants.DEFAULT_KEYPAD);
 
@@ -161,7 +161,7 @@ describe('GARS Tests', function () {
         expect(point.getLongitude()).to.be.approximately(-177.5, 0);
         expect(point.getLatitude()).to.be.approximately(-87.0, 0);
         gars2 = GARS.fromPoint(point);
-        expect(gars2).to.equal(gars);
+        expect(gars2.equals(gars)).to.be.true;
         expect(gars2.coordinate()).to.equal(garsValue + GARSConstants.DEFAULT_KEYPAD);
 
         garsValue = "006AG39";
@@ -176,7 +176,7 @@ describe('GARS Tests', function () {
         expect(point.getLatitude()).to.be.approximately(-87.0, 0);
         gars2 = GARS.fromPoint(Point.point(point.getLongitude() + 0.000001,
             point.getLatitude()));
-        expect(gars2).to.equal(gars);
+        expect(gars2.equals(gars)).to.be.true;
         expect(gars2.coordinate()).to.equal(garsValue);
 
         garsValue = "006AG25";
@@ -191,7 +191,7 @@ describe('GARS Tests', function () {
         expect(point.getLatitude()).to.be.approximately(-86.6666667, 0.000001);
         gars2 = GARS.fromPoint(Point.point(point.getLongitude(),
             point.getLatitude() + 0.000001));
-        expect(gars2).to.equal(gars);
+        expect(gars2.equals(gars)).to.be.true;
         expect(gars2.coordinate()).to.equal(garsValue);
     });
 
