@@ -25,10 +25,11 @@
         "npm": ">= 8.x"
     },
     "license": "MIT",
-    "main": "index.ts",
+    "main": "dist/index.js",
+    "types": "dist/index.d.ts",
     "dependencies": {
         "@ngageoint/color-js": "^2.0.1",
-        "@ngageoint/grid-js": "^0.0.1-beta.15",
+        "@ngageoint/grid-js": "^0.0.1-beta.17",
         "@ngageoint/simple-features-js": "1.1.1-beta.0",
         "winston": "^3.8.2"
     },
@@ -54,7 +55,7 @@
         "build": "npm run compile",
         "report": "nyc report",
         "coverage": "nyc npm run test:run",
-        "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+        "format": "prettier --write \"lib/**/*.ts\" \"test/**/*.ts\"",
         "lint": "tslint -p tsconfig.json",
         "prebuild": "npm run clean",
         "pretest": "npm run build",
