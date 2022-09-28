@@ -2,6 +2,8 @@ import { Point } from '@ngageoint/grid-js';
 import { expect } from 'chai';
 import { GARS } from '../lib/GARS';
 import { GARSConstants } from '../lib/GARSConstants';
+import { GARSUtils } from '../lib/GARSUtils';
+import { GridRange } from '../lib/grid/GridRange';
 import { GridType } from '../lib/grid/GridType';
 
 describe('GARS Tests', function () {
@@ -256,6 +258,53 @@ describe('GARS Tests', function () {
         gars = "204LQ23";
         testCoordinate(-78.08333333, 37.41666667, gars);
         testCoordinateMeters(-8692196.905737048, 4497344.980476594, gars);
+    });
+
+    /**
+     * Test parsing 30 minute full range
+     * 
+     * @throws ParseException
+     *             upon failure to parse
+     */
+    it('test 30 minute parse', function () {
+        const gridRange = new GridRange();
+
+        let count = 0;
+
+        let number = GARSConstants.MIN_BAND_NUMBER;
+        let letters = GARSConstants.MIN_BAND_LETTERS_NUMBER;
+        let lon = GARSConstants.MIN_LON;
+        let lat = GARSConstants.MIN_LAT;
+
+        for (const gars of gridRange) {
+
+            const bandNumber = gars.getLongitude();
+            const bandLetters = gars.getLatitude();
+
+            expect(bandNumber).to.equal(number);
+            expect(bandLetters).to.equal(GARSUtils.bandLetters(letters));
+            expect(gars.getQuadrant()).to.equal(GARSConstants.DEFAULT_QUADRANT);
+            expect(gars.getKeypad()).to.equal(GARSConstants.DEFAULT_KEYPAD);
+
+            let point = gars.toPoint();
+
+            expect(point.getLongitude()).to.be.approximately(lon, 0);
+            expect(point.getLatitude()).to.be.approximately(lat, 0);
+
+            letters++;
+            lat += GridType.THIRTY_MINUTE;
+            if (letters > GARSConstants.MAX_BAND_LETTERS_NUMBER) {
+                letters = GARSConstants.MIN_BAND_LETTERS_NUMBER;
+                lat = GARSConstants.MIN_LAT;
+                number++;
+                lon += GridType.THIRTY_MINUTE;
+            }
+
+            count++;
+        }
+
+        expect(count).to.equal(GARSConstants.MAX_BAND_NUMBER
+            * GARSConstants.MAX_BAND_LETTERS_NUMBER);
     });
 
     /**
