@@ -28,8 +28,8 @@
     "main": "dist/index.js",
     "types": "dist/index.d.ts",
     "dependencies": {
-        "@ngageoint/color-js": "^2.0.1",
-        "@ngageoint/grid-js": "^0.0.1-beta.17",
+        "@ngageoint/color-js": "^2.1.0",
+        "@ngageoint/grid-js": "^0.0.1-beta.18",
         "@ngageoint/simple-features-js": "1.1.1-beta.0",
         "winston": "^3.8.2"
     },
