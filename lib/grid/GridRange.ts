@@ -22,7 +22,7 @@ export class GridRange implements IterableIterator<GARS> {
   /**
    * Band numbers
    */
-  private readonly bandNumbers: IteratorResult<number>;
+  private bandNumbers: IteratorResult<number>;
 
   /**
    * Band letters
@@ -109,14 +109,14 @@ export class GridRange implements IterableIterator<GARS> {
   public next(): IteratorResult<GARS> {
     if (this.bandNumber && !this.bandLetters.done) {
       const letters = this.bandLetters.value;
+      this.bandLetters = this.bandLettersRange.next()
       const gars = GARS.create(this.bandNumber, letters);
-
-      this.bandLetters = this.bandLettersRange.next();
-
       if (this.bandLetters.done) {
-        if (!this.bandNumbers?.done) {
-          this.bandNumber = this.bandNumbers?.value;
-          // TODO this needs to be reset
+        if (!this.bandNumbers.done) {
+          this.bandNumbers = this.bandNumberRange.next();
+          this.bandNumber = this.bandNumbers.value;
+          
+          this.bandLettersRange.reset();
           this.bandLetters = this.bandLettersRange.next();
         } else {
           this.bandNumber = undefined;

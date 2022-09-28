@@ -130,6 +130,10 @@ export class BandLettersRange implements IterableIterator<string> {
     }
   }
 
+  public reset(): void {
+    this.value = this.getSouthValue();
+  }
+
   [Symbol.iterator](): IterableIterator<string> {
     return this;
   }
