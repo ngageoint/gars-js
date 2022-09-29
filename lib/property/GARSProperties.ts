@@ -9,7 +9,7 @@ export class GARSProperties extends GridProperties {
   /**
    * Property file name
    */
-  public static readonly PROPERTIES_FILE = 'gars.properties';
+  public static readonly PROPERTIES_FILE = './resources/gars.properties';
 
   /**
    * Singleton instance
