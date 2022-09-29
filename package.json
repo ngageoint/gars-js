@@ -64,7 +64,8 @@
         "prepublishOnly": "npm run build && npm run lint"
     },
     "files": [
-        "dist"
+        "dist",
+        "resources"
     ],
     "directories": {
         "lib": "./lib"

@@ -109,13 +109,13 @@ export class GridRange implements IterableIterator<GARS> {
   public next(): IteratorResult<GARS> {
     if (this.bandNumber && !this.bandLetters.done) {
       const letters = this.bandLetters.value;
-      this.bandLetters = this.bandLettersRange.next()
+      this.bandLetters = this.bandLettersRange.next();
       const gars = GARS.create(this.bandNumber, letters);
       if (this.bandLetters.done) {
         if (!this.bandNumbers.done) {
           this.bandNumbers = this.bandNumberRange.next();
           this.bandNumber = this.bandNumbers.value;
-          
+
           this.bandLettersRange.reset();
           this.bandLetters = this.bandLettersRange.next();
         } else {
@@ -127,7 +127,6 @@ export class GridRange implements IterableIterator<GARS> {
         done: false,
         value: gars,
       };
-
     } else {
       return {
         done: true,

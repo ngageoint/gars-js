@@ -100,7 +100,6 @@ export class GARSUtils {
    * @return number band value
    */
   public static bandValue(latitudeBand: string): number {
-
     if (latitudeBand.length === 1) {
       return this.bandValueFromChar(latitudeBand.charCodeAt(0));
     }
