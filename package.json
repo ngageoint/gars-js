@@ -29,7 +29,7 @@
     "types": "dist/index.d.ts",
     "dependencies": {
         "@ngageoint/color-js": "^2.1.0",
-        "@ngageoint/grid-js": "^0.0.1-beta.20",
+        "@ngageoint/grid-js": "^0.0.1-beta.22",
         "@ngageoint/simple-features-js": "1.1.1-beta.0",
         "sprintf-js": "^1.1.2"
     },

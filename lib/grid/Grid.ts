@@ -20,8 +20,8 @@ export class Grid extends BaseGrid implements Comparable<Grid> {
    */
   public static readonly DEFAULT_WIDTH = GARSProperties.getInstance().getDoubleProperty(
     true,
-    PropertyConstants.GRID,
-    PropertyConstants.WIDTH,
+    PropertyConstants.GRID.toString(),
+    PropertyConstants.WIDTH.toString(),
   );
 
   /**

@@ -15,8 +15,8 @@ export abstract class GridLabeler extends Labeler {
    */
   public static readonly DEFAULT_TEXT_SIZE = GARSProperties.getInstance().getDoubleProperty(
     true,
-    PropertyConstants.LABELER,
-    PropertyConstants.TEXT_SIZE,
+    PropertyConstants.LABELER.toString(),
+    PropertyConstants.TEXT_SIZE.toString(),
   );
 
   /**
@@ -24,8 +24,8 @@ export abstract class GridLabeler extends Labeler {
    */
   public static readonly DEFAULT_BUFFER = GARSProperties.getInstance().getDoubleProperty(
     true,
-    PropertyConstants.LABELER,
-    PropertyConstants.BUFFER,
+    PropertyConstants.LABELER.toString(),
+    PropertyConstants.BUFFER.toString(),
   );
 
   constructor(
