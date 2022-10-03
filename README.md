@@ -18,3 +18,4 @@ Software source code previously released under an open source license and then m
 ![Build & Test](https://github.com/ngageoint/gars-js/actions/workflows/build-test.yml/badge.svg)
 [![NPM](https://img.shields.io/npm/v/@ngageoint/gars-js.svg)](https://www.npmjs.com/package/@ngageoint/gars-js)
 [![Coverage Status](https://coveralls.io/repos/github/ngageoint/gars-js/badge.svg)](https://coveralls.io/github/ngageoint/gars-js)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat-square)](https://github.com/prettier/prettier)
