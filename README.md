@@ -27,4 +27,4 @@ Default grid properties including zoom ranges, styles, and labelers are defined 
 
 ### Remote Dependencies ###
 
-* [Grid Java](https://github.com/ngageoint/grid-js) (The MIT License (MIT)) - Grid Library
+* [Grid Javascript](https://github.com/ngageoint/grid-js) (The MIT License (MIT)) - Grid Library
