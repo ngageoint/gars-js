@@ -5,5 +5,6 @@ module.exports = {
     ignore: ['node_modules/**'],
     recursive: true,
     require: ['ts-node/register'],
-    spec: ["test/**/*.spec.*"]
+    spec: ["test/**/*.spec.*"],
+    timeout: '30000'
 };
