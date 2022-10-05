@@ -1,6 +1,5 @@
 import { Color } from '@ngageoint/color-js';
 import { BaseGrid, Bounds, GridStyle, GridTile, Point, PropertyConstants } from '@ngageoint/grid-js';
-import { Comparable } from '@ngageoint/simple-features-js';
 import { GridLine } from '../features/GridLine';
 import { GARSUtils } from '../GARSUtils';
 import { GARSProperties } from '../property/GARSProperties';
@@ -14,7 +13,7 @@ import { GridTypeUtils } from './GridTypeUtils';
  *
  * @author osbornb
  */
-export class Grid extends BaseGrid implements Comparable<Grid> {
+export class Grid extends BaseGrid {
   /**
    * Default line width
    */
