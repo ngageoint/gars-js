@@ -84,7 +84,9 @@ export class GridLine extends Line {
    * @return line copy
    */
   public copy(): GridLine {
-    return new GridLine(this);
+    const gridLineCopy = new GridLine(this);
+    gridLineCopy.setGridType(this.gridType);
+    return gridLineCopy;
   }
 
   /**
