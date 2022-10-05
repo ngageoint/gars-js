@@ -39,16 +39,16 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
   constructor(types?: GridType[]) {
     super(GARSProperties.getInstance());
 
-    // createGrids();
-    this.createGrids(false);
-
-    if (types) {
+    if (types && types.length > 0) {
+      this.createGrids(false);
       for (const type of types) {
         const grid = this.getGrid(type);
         if (grid) {
           grid.setEnabled(true);
         }
       }
+    } else {
+      this.createGrids();
     }
 
     this.createZoomGrids();
