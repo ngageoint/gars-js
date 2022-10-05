@@ -70,7 +70,7 @@ export class Grid extends BaseGrid {
    * @return precision degrees
    */
   public getPrecision(): number {
-    return this.type;
+    return GridTypeUtils.getPrecision(this.type);
   }
 
   /**
