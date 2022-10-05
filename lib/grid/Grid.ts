@@ -102,7 +102,7 @@ export class Grid extends BaseGrid {
    */
   private getOrCreateStyle(gridType: GridType): GridStyle {
     let style = this.getStyle(gridType);
-    if (style === null) {
+    if (!style) {
       style = new GridStyle(undefined, 0);
       this.setStyle(style, gridType);
     }
@@ -117,7 +117,7 @@ export class Grid extends BaseGrid {
    * @param style
    *            grid line style
    */
-  public setStyle(style: GridStyle, gridType?: GridType): void {
+  public setStyle(style?: GridStyle, gridType?: GridType): void {
     if (gridType) {
       if (gridType < this.getPrecision()) {
         throw new Error(
@@ -130,7 +130,7 @@ export class Grid extends BaseGrid {
       if (gridType === this.type) {
         super.setStyle(style);
       } else {
-        this.styles.set(gridType, style != null ? style : new GridStyle(undefined, 0));
+        this.styles.set(gridType, style ? style : new GridStyle(undefined, 0));
       }
     }
   }
@@ -340,7 +340,7 @@ export class Grid extends BaseGrid {
    */
   public equals(obj: any): boolean {
     if (this === obj) return true;
-    if (obj === null) return false;
+    if (!obj) return false;
     if (typeof this !== typeof obj) return false;
     const other = obj as Grid;
     if (this.type !== other.type) return false;
