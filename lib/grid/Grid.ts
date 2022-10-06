@@ -1,5 +1,6 @@
 import { Color } from '@ngageoint/color-js';
 import { BaseGrid, Bounds, GridStyle, GridTile, Point, PropertyConstants } from '@ngageoint/grid-js';
+import { IComparable } from 'tstl';
 import { GridLine } from '../features/GridLine';
 import { GARSUtils } from '../GARSUtils';
 import { GARSProperties } from '../property/GARSProperties';
@@ -13,7 +14,7 @@ import { GridTypeUtils } from './GridTypeUtils';
  *
  * @author osbornb
  */
-export class Grid extends BaseGrid {
+export class Grid extends BaseGrid implements IComparable<Grid> {
   /**
    * Default line width
    */
@@ -335,6 +336,13 @@ export class Grid extends BaseGrid {
       : 1; // (0.0, -0.0) or (NaN, !NaN)
   }
 
+  public hashCode(): number {
+    const prime = 31;
+    let result = 1;
+    result = prime * result + (!this.type ? 0 : GridTypeUtils.hashCode(this.type));
+    return result;
+  }
+
   /**
    * {@inheritDoc}
    */
@@ -345,5 +353,9 @@ export class Grid extends BaseGrid {
     const other = obj as Grid;
     if (this.type !== other.type) return false;
     return true;
+  }
+
+  public less(other: Grid): boolean {
+    return this.hashCode() < other.hashCode();
   }
 }
