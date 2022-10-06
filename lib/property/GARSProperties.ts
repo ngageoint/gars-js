@@ -3,7 +3,7 @@ import { GridProperties } from '@ngageoint/grid-js';
 /**
  * GARS property loader
  *
- * @author osbornb
+ *
  */
 export class GARSProperties extends GridProperties {
   /**

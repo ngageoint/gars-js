@@ -7,7 +7,7 @@ import * as sprintf from 'sprintf-js';
 /**
  * Global Area Reference System Coordinate
  *
- * @author osbornb
+ *
  */
 export class GARS {
   /**

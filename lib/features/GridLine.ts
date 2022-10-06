@@ -4,7 +4,7 @@ import { GridType } from '../grid/GridType';
 /**
  * Line between two points
  *
- * @author osbornb
+ *
  */
 export class GridLine extends Line {
   /**

@@ -8,7 +8,7 @@ import { GridType } from './grid/GridType';
 /**
  * Global Area Reference System utilities
  *
- * @author osbornb
+ *
  */
 export class GARSUtils {
   /**

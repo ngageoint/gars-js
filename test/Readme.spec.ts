@@ -6,7 +6,7 @@ import { Grids } from '../lib/grid/Grids';
 /**
  * README example tests
  *
- * @author osbornb
+ *
  */
 describe('Readme Tests', function () {
   /**

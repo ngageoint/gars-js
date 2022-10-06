@@ -6,7 +6,7 @@ import { BandNumberRange } from './BandNumberRange';
 /**
  * Grid Range
  *
- * @author osbornb
+ *
  */
 export class GridRange implements IterableIterator<GARS> {
   /**

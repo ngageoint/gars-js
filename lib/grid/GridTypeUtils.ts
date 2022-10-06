@@ -3,7 +3,7 @@ import { GridType } from './GridType';
 /**
  * Grid type enumeration utilities
  *
- * @author osbornb
+ *
  */
 export class GridTypeUtils {
   /**

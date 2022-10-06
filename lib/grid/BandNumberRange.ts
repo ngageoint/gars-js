@@ -4,7 +4,7 @@ import { GARSUtils } from '../GARSUtils';
 /**
  * Longitude Band Number Range
  *
- * @author osbornb
+ *
  */
 export class BandNumberRange implements IterableIterator<number> {
   /**

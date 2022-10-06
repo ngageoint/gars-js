@@ -12,7 +12,7 @@ import { GridTypeUtils } from './GridTypeUtils';
 /**
  * Grid
  *
- * @author osbornb
+ *
  */
 export class Grid extends BaseGrid implements IComparable<Grid> {
   /**
