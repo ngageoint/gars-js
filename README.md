@@ -1,4 +1,4 @@
-# GARS Java
+# GARS Javascript
 
 #### Global Area Reference System Lib ####
 
@@ -11,7 +11,7 @@ Software source code previously released under an open source license and then m
 
 ### About ###
 
-[GARS](http://ngageoint.github.io/gars-js/) is a Java library providing Global Area Reference System functionality, a standardized geospatial reference system for areas.
+[GARS](http://ngageoint.github.io/gars-js/) is a Javascript library providing Global Area Reference System functionality, a standardized geospatial reference system for areas.
 
 ### Build and Installation ###
 
