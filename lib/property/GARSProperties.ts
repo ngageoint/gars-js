@@ -1,5 +1,5 @@
 import { GridProperties } from '@ngageoint/grid-js';
-import * as config from '../../resources/grid.json';
+import * as config from '../../resources/gars.json';
 
 /**
  * GARS property loader
@@ -10,7 +10,7 @@ export class GARSProperties extends GridProperties {
   /**
    * Singleton instance
    */
-  public static instance = new GARSProperties();
+  public static instance = new GARSProperties(config);
 
   /**
    * Get the singleton instance

@@ -1,13 +1,5 @@
 {
-   "grid":{
-      "width":"2.0"
-   },
-   "labeler":{
-      "text_size":"24.0",
-      "buffer":"0.05"
-   },
    "grids":{
-      "propagate":"true",
       "twenty_degree":{
          "enabled":"true",
          "min_zoom":"0",
