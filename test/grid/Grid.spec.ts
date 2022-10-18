@@ -11,7 +11,7 @@ describe('Grid Tests', function () {
 
   it('test style', function () {
     const grid = new Grid(GridType.THIRTY_MINUTE);
-    expect(grid.getStyle()).to.be.undefined;
+    expect(grid.getStyle()).to.not.be.undefined;
 
     expect(function () {
       grid.setStyle(new GridStyle(undefined, 0), GridType.FIFTEEN_MINUTE);

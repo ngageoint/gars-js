@@ -11,8 +11,6 @@ import { GridTypeUtils } from './GridTypeUtils';
 
 /**
  * Grid
- *
- *
  */
 export class Grid extends BaseGrid implements IComparable<Grid> {
   /**
@@ -81,14 +79,16 @@ export class Grid extends BaseGrid implements IComparable<Grid> {
    *            grid type
    * @return grid type line style
    */
-  public getStyle(gridType?: GridType): GridStyle | undefined {
-    let style: GridStyle | undefined;
+  public getStyle(gridType?: GridType): GridStyle {
+    let style: GridStyle;
     if (gridType !== null && gridType !== undefined) {
       if (gridType === this.type) {
         style = super.getStyle();
       } else {
-        style = this.styles.get(gridType);
+        style = this.styles.get(gridType)!;
       }
+    } else {
+      style = super.getStyle();
     }
 
     return style;
