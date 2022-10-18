@@ -190,7 +190,7 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
     let color = this.loadGridStyleColor(gridKey, gridKey2);
     let width = this.loadGridStyleWidth(gridKey, gridKey2);
 
-    if ((!color || !width) && styles) {
+    if ((!color || width === undefined || width === null) && styles) {
       const style = styles.get(gridType);
       if (style) {
         if (!color) {

@@ -166,9 +166,7 @@ export class GARS {
     if (typeof this !== typeof obj) return false;
     const other = obj as GARS;
     if (this.keypad !== other.keypad) return false;
-    if (!this.latitude) {
-      if (other.latitude) return false;
-    } else if (this.latitude !== other.latitude) return false;
+    if (this.latitude !== other.latitude) return false;
     if (this.longitude !== other.longitude) return false;
     if (this.quadrant !== other.quadrant) return false;
     return true;
