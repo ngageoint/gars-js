@@ -6,8 +6,6 @@ import * as sprintf from 'sprintf-js';
 
 /**
  * Global Area Reference System Coordinate
- *
- *
  */
 export class GARS {
   /**
@@ -302,11 +300,11 @@ export class GARS {
     let keypad = GARSConstants.DEFAULT_KEYPAD;
 
     const quadrantValue = matches![3];
-    if (quadrantValue) {
+    if (quadrantValue !== null && quadrantValue !== undefined) {
       quadrant = Number.parseInt(quadrantValue, 10);
 
       const keypadValue = matches![4];
-      if (keypadValue) {
+      if (keypadValue !== null && keypadValue !== undefined) {
         keypad = Number.parseInt(keypadValue, 10);
       }
     }
@@ -331,9 +329,9 @@ export class GARS {
 
     let precision: GridType;
 
-    if (matches![4]) {
+    if (matches![4] !== null && matches![4] !== undefined) {
       precision = GridType.FIVE_MINUTE;
-    } else if (matches![3]) {
+    } else if (matches![3] !== null && matches![3] !== undefined) {
       precision = GridType.FIFTEEN_MINUTE;
     } else {
       precision = GridType.THIRTY_MINUTE;

@@ -3,8 +3,6 @@ import { GridType } from '../grid/GridType';
 
 /**
  * Line between two points
- *
- *
  */
 export class GridLine extends Line {
   /**
@@ -65,7 +63,7 @@ export class GridLine extends Line {
    * @return true if has grid type
    */
   public hasGridType(): boolean {
-    return this.gridType !== null;
+    return this.gridType !== null && this.gridType !== undefined;
   }
 
   /**

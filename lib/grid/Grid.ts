@@ -83,7 +83,7 @@ export class Grid extends BaseGrid implements IComparable<Grid> {
    */
   public getStyle(gridType?: GridType): GridStyle | undefined {
     let style: GridStyle | undefined;
-    if (gridType) {
+    if (gridType !== null && gridType !== undefined) {
       if (gridType === this.type) {
         style = super.getStyle();
       } else {
@@ -119,7 +119,7 @@ export class Grid extends BaseGrid implements IComparable<Grid> {
    *            grid line style
    */
   public setStyle(style?: GridStyle, gridType?: GridType): void {
-    if (gridType) {
+    if (gridType !== null && gridType !== undefined) {
       if (gridType < this.getPrecision()) {
         throw new Error(
           'Grid can not define a style for a higher precision grid type. Type: ' +
@@ -152,7 +152,7 @@ export class Grid extends BaseGrid implements IComparable<Grid> {
    */
   public getColor(gridType?: GridType): Color | undefined {
     let color: Color | undefined;
-    if (gridType) {
+    if (gridType !== null && gridType !== undefined) {
       const style = this.getStyle(gridType);
       if (style) {
         color = style.getColor();
@@ -174,7 +174,7 @@ export class Grid extends BaseGrid implements IComparable<Grid> {
    *            grid line color
    */
   public setColor(color?: Color, gridType?: GridType): void {
-    if (gridType) {
+    if (gridType !== null && gridType !== undefined) {
       this.getOrCreateStyle(gridType).setColor(color);
     }
   }
@@ -207,7 +207,7 @@ export class Grid extends BaseGrid implements IComparable<Grid> {
    *            grid line width
    */
   public setWidth(width: number, gridType?: GridType): void {
-    if (gridType) {
+    if (gridType !== null && gridType !== undefined) {
       this.getOrCreateStyle(gridType).setWidth(width);
     }
   }
