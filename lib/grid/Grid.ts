@@ -119,20 +119,22 @@ export class Grid extends BaseGrid implements IComparable<Grid> {
    *            grid line style
    */
   public setStyle(style?: GridStyle, gridType?: GridType): void {
-    if (gridType !== null && gridType !== undefined) {
-      if (gridType < this.getPrecision()) {
-        throw new Error(
-          'Grid can not define a style for a higher precision grid type. Type: ' +
-            this.type +
-            ', Style Type: ' +
-            gridType,
-        );
-      }
-      if (gridType === this.type) {
-        super.setStyle(style);
-      } else {
-        this.styles.set(gridType, style ? style : new GridStyle(undefined, 0));
-      }
+    if (gridType === null || gridType === undefined) {
+      gridType = this.type;
+    }
+
+    if (gridType < this.getPrecision()) {
+      throw new Error(
+        'Grid can not define a style for a higher precision grid type. Type: ' +
+          this.type +
+          ', Style Type: ' +
+          gridType,
+      );
+    }
+    if (gridType === this.type) {
+      super.setStyle(style);
+    } else {
+      this.styles.set(gridType, style ? style : new GridStyle(undefined, 0));
     }
   }
 
@@ -208,9 +210,10 @@ export class Grid extends BaseGrid implements IComparable<Grid> {
    *            grid line width
    */
   public setWidth(width: number, gridType?: GridType): void {
-    if (gridType !== null && gridType !== undefined) {
-      this.getOrCreateStyle(gridType).setWidth(width);
+    if (gridType === null || gridType === undefined) {
+      gridType = this.type;
     }
+    this.getOrCreateStyle(gridType).setWidth(width);
   }
 
   /**

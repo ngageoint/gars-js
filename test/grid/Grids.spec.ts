@@ -24,4 +24,10 @@ describe('Grids Tests', function () {
     const grid = grids.getGrid(GridType.TEN_DEGREE);
     expect(grid?.getColor()).to.not.be.undefined;
   });
+
+  it('test width', function () {
+    const grids = Grids.create([GridType.TEN_DEGREE]);
+    const grid = grids.getGrid(GridType.TEN_DEGREE);
+    expect(grid?.getWidth()).to.equal(2);
+  });
 });
