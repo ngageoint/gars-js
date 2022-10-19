@@ -174,9 +174,10 @@ export class Grid extends BaseGrid implements IComparable<Grid> {
    *            grid line color
    */
   public setColor(color?: Color, gridType?: GridType): void {
-    if (gridType !== null && gridType !== undefined) {
-      this.getOrCreateStyle(gridType).setColor(color);
+    if (gridType === null || gridType === undefined) {
+      gridType = this.type;
     }
+    this.getOrCreateStyle(gridType).setColor(color);
   }
 
   /**

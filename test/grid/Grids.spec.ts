@@ -18,4 +18,10 @@ describe('Grids Tests', function () {
       }
     }
   });
+
+  it('test color', function () {
+    const grids = Grids.create([GridType.TEN_DEGREE]);
+    const grid = grids.getGrid(GridType.TEN_DEGREE);
+    expect(grid?.getColor()).to.not.be.undefined;
+  });
 });
