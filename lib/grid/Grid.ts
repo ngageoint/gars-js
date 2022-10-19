@@ -157,9 +157,9 @@ export class Grid extends BaseGrid implements IComparable<Grid> {
       if (style) {
         color = style.getColor();
       }
-      if (!color) {
-        color = super.getColor();
-      }
+    }
+    if (!color) {
+      color = super.getColor();
     }
 
     return color;
