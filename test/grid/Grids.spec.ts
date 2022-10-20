@@ -36,7 +36,6 @@ describe('Grids Tests', function () {
     const zoom = 5;
 
     const grids = Grids.create();
-    // x, y is in India
     const tile = GridTile.tile(256, 256, 45, 28, zoom);
     const zoomGrids = grids.getGrids(zoom);
     expect(zoomGrids?.hasGrids()).to.be.true;
