@@ -3,7 +3,7 @@ import { GridConstants } from '@ngageoint/grid-js';
 /**
  * Global Area Reference System Constants
  *
- * @author osbornb
+ *
  */
 export class GARSConstants {
   /**

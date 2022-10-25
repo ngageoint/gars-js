@@ -3,7 +3,7 @@ import { GridType } from './GridType';
 /**
  * Grid type enumeration utilities
  *
- * @author osbornb
+ *
  */
 export class GridTypeUtils {
   /**
@@ -41,7 +41,7 @@ export class GridTypeUtils {
    */
   public static lessPrecise(type: GridType): Set<GridType> {
     const values = GridTypeUtils.values();
-    const ordinal = Object.keys(GridType).indexOf(type.toString());
+    const ordinal = GridTypeUtils.ordinal(type);
 
     const types = new Set<GridType>();
     for (let i = 0; i < ordinal; i++) {
@@ -60,7 +60,7 @@ export class GridTypeUtils {
    */
   public static morePrecise(type: GridType): Set<GridType> {
     const values = GridTypeUtils.values();
-    const ordinal = Object.keys(GridType).indexOf(type.toString());
+    const ordinal = GridTypeUtils.ordinal(type);
 
     const types = new Set<GridType>();
     for (let i = ordinal; i < values.length; i++) {
@@ -71,9 +71,37 @@ export class GridTypeUtils {
 
   public static values(): GridType[] {
     const gridTypes: GridType[] = [];
-    for (const type of Object.keys(GridType)) {
-      gridTypes.push(GridType[type as keyof typeof GridType]);
+    const values = Object.keys(GridType).map((key: any) => GridType[key]);
+    for (const type of values) {
+      if (Number.isInteger(type)) {
+        gridTypes.push(type as unknown as number);
+      }
     }
     return gridTypes;
+  }
+
+  public static ordinal(type: GridType): number {
+    const types: string[] = Object.keys(GridType);
+
+    let ordinal = 0;
+    for (let i = 0; i < types.length; i++) {
+      if (isNaN(Number(types[i]))) {
+        if (types[i] === GridType[type]) {
+          break;
+        }
+        ordinal++;
+      }
+    }
+
+    return ordinal;
+  }
+
+  public static hashCode(type: GridType): number {
+    let h: number = 0;
+    const str = type.toString();
+    for (let i = 0; i < str.length; i++) {
+      h = 31 * h + str.charCodeAt(i);
+    }
+    return h & 0xffffffff;
   }
 }

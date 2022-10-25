@@ -1,14 +1,11 @@
-import { Bounds, GridConstants, GridUtils } from '@ngageoint/grid-js';
+import { GridConstants, GridUtils } from '@ngageoint/grid-js';
 import { GARSConstants } from './GARSConstants';
-import { BandLettersRange } from './grid/BandLettersRange';
-import { BandNumberRange } from './grid/BandNumberRange';
-import { GridRange } from './grid/GridRange';
 import { GridType } from './grid/GridType';
 
 /**
  * Global Area Reference System utilities
  *
- * @author osbornb
+ *
  */
 export class GARSUtils {
   /**
@@ -243,75 +240,6 @@ export class GARSUtils {
    */
   public static keypad(column: number, row: number): number {
     return (2 - row) * 3 + column + 1;
-  }
-
-  /**
-   * Get a grid range from the bounds
-   *
-   * @param bounds
-   *            bounds
-   * @return grid range
-   */
-  public static getGridRange(bounds: Bounds): GridRange {
-    bounds = bounds.toDegrees();
-    const bandNumberRange = this.getBandNumberRangeFromBounds(bounds);
-    const bandLettersRange = this.getBandLettersRangeFromBounds(bounds);
-    return new GridRange(bandNumberRange, bandLettersRange);
-  }
-
-  /**
-   * Get a band number range between the western and eastern bounds
-   *
-   * @param bounds
-   *            bounds
-   * @return band number range
-   */
-  public static getBandNumberRangeFromBounds(bounds: Bounds): BandNumberRange {
-    bounds = bounds.toDegrees();
-    return this.getBandNumberRange(bounds.getMinLongitude(), bounds.getMaxLongitude());
-  }
-
-  /**
-   * Get a band number range between the western and eastern longitudes
-   *
-   * @param west
-   *            western longitude in degrees
-   * @param east
-   *            eastern longitude in degrees
-   * @return band number range
-   */
-  public static getBandNumberRange(west: number, east: number): BandNumberRange {
-    const westBand = this.getLongitudeBand(west);
-    const eastBand = this.getLongitudeBand(east);
-    return new BandNumberRange(westBand, eastBand);
-  }
-
-  /**
-   * Get a band letters range between the southern and northern bounds
-   *
-   * @param bounds
-   *            bounds
-   * @return band letters range
-   */
-  public static getBandLettersRangeFromBounds(bounds: Bounds): BandLettersRange {
-    bounds = bounds.toDegrees();
-    return this.getBandLettersRange(bounds.getMinLatitude(), bounds.getMaxLatitude());
-  }
-
-  /**
-   * Get a band letters range between the southern and northern latitudes in
-   * degrees
-   *
-   * @param south
-   *            southern latitude in degrees
-   * @param north
-   *            northern latitude in degrees
-   * @return band letters range
-   */
-  public static getBandLettersRange(south: number, north: number): BandLettersRange {
-    const southBand = this.getLatitudeBand(south);
-    const northBand = this.getLatitudeBand(north);
-    return new BandLettersRange(southBand, northBand);
   }
 
   /**

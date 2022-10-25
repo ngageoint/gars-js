@@ -5,7 +5,7 @@ import { GridType } from './GridType';
 /**
  * GARS Grid Label
  *
- * @author osbornb
+ *
  */
 export class GridLabel extends Label {
   /**

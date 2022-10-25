@@ -6,7 +6,7 @@ import { BandNumberRange } from './BandNumberRange';
 /**
  * Grid Range
  *
- * @author osbornb
+ *
  */
 export class GridRange implements IterableIterator<GARS> {
   /**
@@ -107,7 +107,7 @@ export class GridRange implements IterableIterator<GARS> {
   }
 
   public next(): IteratorResult<GARS> {
-    if (this.bandNumber && !this.bandLetters.done) {
+    if (this.bandNumber !== null && this.bandNumber !== undefined && !this.bandLetters.done) {
       const letters = this.bandLetters.value;
       this.bandLetters = this.bandLettersRange.next();
       const gars = GARS.create(this.bandNumber, letters);

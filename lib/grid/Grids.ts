@@ -10,8 +10,6 @@ import { ZoomGrids } from './ZoomGrids';
 
 /**
  * Grids
- *
- * @author osbornb
  */
 export class Grids extends BaseGrids<Grid, ZoomGrids> {
   /**
@@ -39,16 +37,16 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
   constructor(types?: GridType[]) {
     super(GARSProperties.getInstance());
 
-    // createGrids();
-    this.createGrids(false);
-
-    if (types) {
+    if (types && types.length > 0) {
+      this.createGrids(false);
       for (const type of types) {
         const grid = this.getGrid(type);
         if (grid) {
           grid.setEnabled(true);
         }
       }
+    } else {
+      this.createGrids();
     }
 
     this.createZoomGrids();
@@ -192,22 +190,22 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
     let color = this.loadGridStyleColor(gridKey, gridKey2);
     let width = this.loadGridStyleWidth(gridKey, gridKey2);
 
-    if ((!color || !width) && styles) {
+    if ((!color || width === undefined || width === null) && styles) {
       const style = styles.get(gridType);
       if (style) {
-        if (color === null) {
+        if (!color) {
           const styleColor = style.getColor();
           if (styleColor) {
             color = styleColor.copy();
           }
         }
-        if (width === null) {
+        if (width === null || width === undefined) {
           width = style.getWidth();
         }
       }
     }
 
-    if (color || width) {
+    if (color || (width !== null && width !== undefined)) {
       const style = this.getGridStyle(grid, color, width);
       grid.setStyle(style, gridType);
 
@@ -610,7 +608,7 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
     const labeler = this.getRequiredLabeler(type);
     labeler.setMinZoom(minZoom);
     const maxZoom = labeler.getMaxZoom();
-    if (maxZoom && maxZoom < minZoom) {
+    if (maxZoom !== null && maxZoom !== undefined && maxZoom < minZoom) {
       labeler.setMaxZoom(minZoom);
     }
   }
@@ -626,7 +624,7 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
   public setLabelMaxZoom(type: GridType, maxZoom: number): void {
     const labeler = this.getRequiredLabeler(type);
     labeler.setMaxZoom(maxZoom);
-    if (maxZoom && labeler.getMinZoom() > maxZoom) {
+    if (maxZoom !== null && maxZoom !== undefined && labeler.getMinZoom() > maxZoom) {
       labeler.setMinZoom(maxZoom);
     }
   }
@@ -643,7 +641,7 @@ export class Grids extends BaseGrids<Grid, ZoomGrids> {
    */
   public setLabelZoomRange(type: GridType, minZoom: number, maxZoom: number): void {
     const labeler = this.getRequiredLabeler(type);
-    if (maxZoom && maxZoom < minZoom) {
+    if (maxZoom !== null && maxZoom !== undefined && maxZoom < minZoom) {
       throw new Error("Min zoom '" + minZoom + "' can not be larger than max zoom '" + maxZoom + "'");
     }
     labeler.setMinZoom(minZoom);

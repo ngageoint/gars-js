@@ -255,7 +255,6 @@ describe('GARS Tests', function () {
    *             upon failure to parse
    */
   it('test 30 minute parse', function () {
-    this.timeout(20000);
     const gridRange = new GridRange();
 
     let count = 0;

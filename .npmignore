@@ -3,6 +3,7 @@
 docs/
 lib/
 test/
+resources/
 
 *.js.map
 

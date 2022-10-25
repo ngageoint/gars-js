@@ -4,7 +4,7 @@ import { GARSUtils } from '../GARSUtils';
 /**
  * Latitude Band Letters Range
  *
- * @author osbornb
+ *
  */
 export class BandLettersRange implements IterableIterator<string> {
   /**
