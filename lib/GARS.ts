@@ -235,30 +235,34 @@ export class GARS {
    * @return GARS
    */
   public static from(longitude: number, latitude: number): GARS {
-    const lon = GARSUtils.getLongitudeDecimalBand(longitude);
-    const lat = GARSUtils.getLatitudeDecimalBandValue(latitude);
+    // Bound the latitude and normalize the longitude to [-180, 180):
+    // 180 is the same meridian as -180, in band 001
+    latitude = Math.max(GARSConstants.MIN_LAT, Math.min(latitude, GARSConstants.MAX_LAT));
+    if (longitude < -180 || longitude >= 180) {
+      longitude = ((((longitude + 180) % 360) + 360) % 360) - 180;
+    }
 
-    const lonInt = ~~lon;
-    const latInt = ~~lat;
+    // Index of the 5 minute cell, counted from 180 W and 90 S. Multiply
+    // before adding the offset so that values on a cell boundary land in the
+    // cell they start (scaling the band fractions in steps let rounding put
+    // them in the cell below or to the left). The top row includes latitude 90.
+    let lonIndex = Math.floor(longitude * 12.0) + 180 * 12;
+    let latIndex = Math.floor(latitude * 12.0) + 90 * 12;
+    lonIndex = Math.max(0, Math.min(lonIndex, 360 * 12 - 1));
+    latIndex = Math.max(0, Math.min(latIndex, 180 * 12 - 1));
+
+    const lonInt = Math.floor(lonIndex / 6) + 1;
+    const latInt = Math.floor(latIndex / 6) + 1;
 
     const latBand = GARSUtils.bandLetters(latInt);
 
-    let lonDecimal = lon - lonInt;
-    let latDecimal = lat - latInt;
-
-    const quadrantColumn = lonDecimal * 2.0;
-    const quadrantRow = latDecimal * 2.0;
-
-    const quadrantColumnInt = ~~quadrantColumn;
-    const quadrantRowInt = ~~quadrantRow;
+    const quadrantColumnInt = Math.floor((lonIndex % 6) / 3);
+    const quadrantRowInt = Math.floor((latIndex % 6) / 3);
 
     const quadrant = GARSUtils.quadrant(quadrantColumnInt, quadrantRowInt);
 
-    lonDecimal = quadrantColumn - quadrantColumnInt;
-    latDecimal = quadrantRow - quadrantRowInt;
-
-    const keypadColumn = ~~(lonDecimal * 3.0);
-    const keypadRow = ~~(latDecimal * 3.0);
+    const keypadColumn = lonIndex % 3;
+    const keypadRow = latIndex % 3;
 
     const keypad = GARSUtils.keypad(keypadColumn, keypadRow);
 
