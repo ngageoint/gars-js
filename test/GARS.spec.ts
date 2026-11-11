@@ -378,8 +378,10 @@ describe('GARS Tests', function () {
       for (let j = 0; j < 180 * 12; j += 5) {
         const lonMinutes = i * 5 - 180 * 60;
         const latMinutes = j * 5 - 90 * 60;
-        const lon = Math.sign(lonMinutes) * (Math.floor(Math.abs(lonMinutes) / 60) + (Math.abs(lonMinutes) % 60) / 60.0);
-        const lat = Math.sign(latMinutes) * (Math.floor(Math.abs(latMinutes) / 60) + (Math.abs(latMinutes) % 60) / 60.0);
+        const lon =
+          Math.sign(lonMinutes) * (Math.floor(Math.abs(lonMinutes) / 60) + (Math.abs(lonMinutes) % 60) / 60.0);
+        const lat =
+          Math.sign(latMinutes) * (Math.floor(Math.abs(latMinutes) / 60) + (Math.abs(latMinutes) % 60) / 60.0);
         const southwest = GARS.from(lon, lat).toPoint();
         expect(southwest.getLongitude()).to.be.closeTo(lon, 1e-9);
         expect(southwest.getLatitude()).to.be.closeTo(lat, 1e-9);
