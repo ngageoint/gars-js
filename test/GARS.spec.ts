@@ -353,4 +353,39 @@ describe('GARS Tests', function () {
     expect(gars.coordinate(GridType.THIRTY_MINUTE)).to.equal(value.substring(0, 5));
     expect(gars.coordinate(GridType.FIFTEEN_MINUTE)).to.equal(value.substring(0, 6));
   }
+
+  /**
+   * Test points on the antimeridian, at the poles, out of range, and on whole
+   * minute cell boundaries
+   */
+  it('test cell boundaries', function () {
+    // 180 is the same meridian as -180; latitude 90 is in the top band QZ
+    expect(GARS.from(180, 0).coordinate()).to.equal('001HN37');
+    expect(GARS.from(0, 90).coordinate()).to.equal('361QZ11');
+    expect(GARS.from(180, 90).coordinate()).to.equal('001QZ11');
+    expect(GARS.from(0, 100).coordinate()).to.equal('361QZ11');
+    expect(GARS.from(0, -100).coordinate()).to.equal('361AA37');
+    expect(GARS.from(540, 0).coordinate()).to.equal('001HN37');
+    expect(GARS.from(179.9999999, 89.9999999).coordinate()).to.equal('720QZ23');
+    GARS.parse(GARS.from(180, 0).coordinate());
+    GARS.parse(GARS.from(0, 90).coordinate());
+
+    // A point on a 5 minute boundary is in the cell it starts
+    expect(GARS.from(10 + 5 / 60.0, 10 + 5 / 60.0).coordinate()).to.equal('381JJ35');
+    expect(GARS.from(-(10 + 5 / 60.0), -(10 + 5 / 60.0)).coordinate()).to.equal('340GR23');
+
+    for (let i = 0; i < 360 * 12; i += 7) {
+      for (let j = 0; j < 180 * 12; j += 5) {
+        const lonMinutes = i * 5 - 180 * 60;
+        const latMinutes = j * 5 - 90 * 60;
+        const lon =
+          Math.sign(lonMinutes) * (Math.floor(Math.abs(lonMinutes) / 60) + (Math.abs(lonMinutes) % 60) / 60.0);
+        const lat =
+          Math.sign(latMinutes) * (Math.floor(Math.abs(latMinutes) / 60) + (Math.abs(latMinutes) % 60) / 60.0);
+        const southwest = GARS.from(lon, lat).toPoint();
+        expect(southwest.getLongitude()).to.be.closeTo(lon, 1e-9);
+        expect(southwest.getLatitude()).to.be.closeTo(lat, 1e-9);
+      }
+    }
+  });
 });
